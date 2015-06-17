@@ -1,0 +1,25 @@
+{
+  "name": "angularjs-datetime-picker",
+  "version": "0.1.0",
+  "description": "Very Lightweight DateTime Picker Aor AngularJS Without Using Any External Libraries",
+  "main": "angularjs-datetime-picker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/allenhwkim/angularjs-datetime-picker.git"
+  },
+  "keywords": [
+    "angularjs",
+    "directive",
+    "date",
+    "datetime"
+  ],
+  "author": "Allen Kim <allenhwkim@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/allenhwkim/angularjs-datetime-picker/issues"
+  },
+  "homepage": "https://github.com/allenhwkim/angularjs-datetime-picker"
+}

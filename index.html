@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="angularjs-datetime-picker.css" />
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="angularjs-datetime-picker.js"></script>
+  <script>
+    angular.module('myApp',['angularjs-datetime-picker']);
+  </script>
+</head>
+<body ng-app="myApp">
+  <h1>Datetime Picker</h1>
+
+  &lt;input ng-model="date4" datetime-picker /> <br/>
+  <input ng-model="date1" datetime-picker /> <br/> <br/>
+
+  &lt;input ng-model="date2" datetime-picker date-format="yyyy-MM-dd" /> <br/>
+  <input ng-model="date2" datetime-picker date-format="yyyy-MM-dd" /> <br/> <br/> <br/>
+
+  &lt;input ng-model="date3" datetime-picker date-format="yyyy-MM-dd HH:mm:ss" /> <br/>
+  <input ng-model="date3" datetime-picker date-format="yyyy-MM-dd HH:mm:ss" /> <br/> <br/>
+
+  &lt;input ng-model="date4" datetime-picker hour="23" minute='59'/><br/>
+  <input ng-model="date4" datetime-picker hour="23" minute='59'/> <br/> <br/>
+
+  &lt;input ng-model="date5" datetime-picker date-format="yyyy-MM-dd HH:mm:ss" year="2014" month="12" day="31" /><br/>
+  <input ng-model="date5" datetime-picker date-format="yyyy-MM-dd HH:mm:ss" year="2014" month="12" day="31" /> <br/> <br/>
+
+</body>
+</html>
