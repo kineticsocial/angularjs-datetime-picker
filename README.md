@@ -1,5 +1,5 @@
-DateTime Piker For AngularJS
-============================
+Simple DateTime Piker For AngularJS
+===================================
 
 No JQuery, No Bootstrap, Just AngularJS
 
