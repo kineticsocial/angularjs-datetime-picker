@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/allenhwkim/angularjs-datetime-picker.git"
+    "url": "https://github.com/kineticsocial/angularjs-datetime-picker.git"
   },
   "keywords": [
     "angularjs",
@@ -19,7 +19,7 @@
   "author": "Allen Kim <allenhwkim@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/allenhwkim/angularjs-datetime-picker/issues"
+    "url": "https://github.com/kineticsocial/angularjs-datetime-picker/issues"
   },
-  "homepage": "https://github.com/allenhwkim/angularjs-datetime-picker"
+  "homepage": "https://github.com/kineticsocial/angularjs-datetime-picker"
 }
