@@ -29,12 +29,15 @@
       this.closeDatetimePicker();
       var div = angular.element('<div datetime-picker-popup ng-cloak></div');
       options.dateFormat && div.attr('date-format', options.dateFormat);
-      options.ngModel && div.attr('ng-model', options.ngModel);
-      options.year    && div.attr('year', parseInt(options.year));
-      options.month   && div.attr('month', parseInt(options.month));
-      options.day     && div.attr('day', parseInt(options.day));
-      options.hour    && div.attr('hour', parseInt(options.hour));
-      options.minute  && div.attr('minute', parseInt(options.minute));
+      options.ngModel  && div.attr('ng-model', options.ngModel);
+      options.year     && div.attr('year', parseInt(options.year));
+      options.month    && div.attr('month', parseInt(options.month));
+      options.day      && div.attr('day', parseInt(options.day));
+      options.hour     && div.attr('hour', parseInt(options.hour));
+      options.minute   && div.attr('minute', parseInt(options.minute));
+      if (options.dateOnly === '' || options.dateOnly === true) {
+        div.attr('date-only', 'true');
+      }
 
       var triggerEl = options.triggerEl;
       options.scope = options.scope || angular.element(triggerEl).scope();
@@ -45,8 +48,12 @@
       //show datetimePicker below triggerEl
       var bcr = triggerEl.getBoundingClientRect();
       datetimePickerEl.style.position='absolute';
-      datetimePickerEl.style.top = (bcr.bottom + window.scrollY) + 'px';
       datetimePickerEl.style.left= (bcr.left + window.scrollX) + 'px';
+      if (window.innerHeight - bcr.bottom > 300) {
+        datetimePickerEl.style.top = (bcr.bottom + window.scrollY) + 'px';
+      } else {
+        datetimePickerEl.style.bottom = (window.innerHeight - bcr.top + window.scrollY) + 'px';
+      }
 
       options.scope.$applyAsync();
       $document[0].body.addEventListener('click', this.closeDatetimePicker);
@@ -77,14 +84,18 @@
     '    <span title="{{months[mv.month].fullName}}">{{months[mv.month].shortName}}</span> {{mv.year}}',
     '    <button type="button" class="adp-next" ng-click="addMonth(1)">&raquo;</button>',
     '  </div>',
-    '  <div class="adp-days" ng-click="pickDay($event)">',
+    '  <div class="adp-days" ng-click="setDate($event)">',
     '    <div class="adp-day-of-week" ng-repeat="dayOfWeek in ::daysOfWeek" title="{{dayOfWeek.fullName}}">{{::dayOfWeek.firstLetter}}</div>',
     '    <div class="adp-day" ng-repeat="day in mv.leadingDays">{{::day}}</div>',
     '    <div class="adp-day" ng-repeat="day in mv.days" date="{{::mv.year}}-{{::mv.month}}-{{::day}}" ',
     '      ng-class="{selected: (day == selectedDay)}">{{::day}}</div>',
     '    <div class="adp-day" ng-repeat="day in mv.trailingDays">{{::day}}</div>',
-    '    <input type="range" min="0" max="1439" ng-model="minutes" /> {{hhmm(minutes)}} ',
     '  </div>',
+    '  <div class="adp-days" ng-show="::!dateOnly"> ',
+    '    Time : {{("0"+inputHour).slice(-2)}} : {{("0"+inputMinute).slice(-2)}} <br/>',
+    '    <label>Hour:</label> <input type="range" min="0" max="23" ng-model="inputHour" ng-change="updateNgModel()" />',
+    '    <label>Min.:</label> <input type="range" min="0" max="59" ng-model="inputMinute"  ng-change="updateNgModel()"/> ',
+    '  </div> ',
     '</div>'].join("\n");
 
   var datetimePickerPopup = function($locale, dateFilter){
@@ -137,11 +148,13 @@
     };
 
     var linkFunc = function(scope, element, attrs, ctrl) { //jshint ignore:line
-      console.log('ctrl.date', ctrl.date);
       initVars(); //initialize days, months, daysOfWeek, and firstDayOfWeek;
       var dateFormat = attrs.dateFormat || 'short';
       scope.months = months;
       scope.daysOfWeek = daysOfWeek;
+      scope.inputHour;
+      scope.inputMinute;
+      scope.inputDate;
 
       scope.$applyAsync( function() {
         ctrl.triggerEl = angular.element(element[0].triggerEl);
@@ -154,15 +167,16 @@
         }
         if (!scope.selectedDate || isNaN(scope.selectedDate.getTime())) { // no predefined date
           var today = new Date();
-          console.log('scope', scope);
           var year = scope.year || today.getFullYear();
           var month = scope.month ? (scope.month-1) : today.getMonth();
           var day = scope.day || today.getDate();
           var hour = scope.hour || today.getHours();
           var minute = scope.minute || today.getMinutes();
           scope.selectedDate = new Date(year, month, day, hour, minute, 0);
-        } 
-        scope.minutes = scope.selectedDate.getHours()*60 + scope.selectedDate.getMinutes();
+        }
+        scope.inputDate   = dateFilter(scope.selectedDate, 'yyyy-MM-dd');
+        scope.inputHour   = scope.selectedDate.getHours();
+        scope.inputMinute = scope.selectedDate.getMinutes();
 
         // Default to current year and month
         scope.mv = getMonthView(scope.selectedDate.getFullYear(), scope.selectedDate.getMonth());
@@ -173,24 +187,23 @@
         }
       });
 
-      scope.hhmm = function(minutes) {
-        var date = new Date(1970,1,1).setSeconds(minutes*60);
-        return dateFilter(date, 'HH:mm');
-      };
-
       scope.addMonth = function (amount) {
         scope.mv = getMonthView(scope.mv.year, scope.mv.month + amount);
       };
 
-      scope.pickDay = function (evt) {
+      scope.setDate = function (evt) {
         var target = angular.element(evt.target)[0];
+        if (target.hasAttribute('date')) {
+          scope.inputDate = target.getAttribute('date');
+          scope.updateNgModel();
+        }
+      };
 
-        if (target.hasAttribute('date')) { // selectable date
-          scope.selectedDate = new Date(target.getAttribute('date') + ' '+scope.hhmm(scope.minutes));
-          scope.selectedDay = scope.selectedDate.getDate();
-          if (attrs.ngModel) {
-            ctrl.triggerEl.scope()[attrs.ngModel] = dateFilter(scope.selectedDate, dateFormat);
-          }
+      scope.updateNgModel = function() {
+        scope.selectedDate = new Date(scope.inputDate + ' ' + scope.inputHour + ':' + scope.inputMinute);
+        scope.selectedDay = scope.selectedDate.getDate();
+        if (attrs.ngModel) {
+          ctrl.triggerEl.scope()[attrs.ngModel] = dateFilter(scope.selectedDate, dateFormat);
         }
       };
 
@@ -207,7 +220,8 @@
         month: '=',
         day: '=',
         hour: '=',
-        minute: '='
+        minute: '=',
+        dateOnly: '='
       },
       link: linkFunc
     };
@@ -227,7 +241,8 @@
             month: attrs.month,
             day: attrs.day,
             hour: attrs.hour,
-            minute: attrs.minute
+            minute: attrs.minute,
+            dateOnly: attrs.dateOnly
           });
         });
       }
