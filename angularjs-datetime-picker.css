@@ -4,6 +4,7 @@
   border: 1px solid #ddd;
   display: inline-block;
   background: #fff;
+  box-sizing: border-box;
 }
 .angularjs-datetime-picker > .adp-month {
   text-align: center;
@@ -48,17 +49,17 @@
 .angularjs-datetime-picker > .adp-days > .adp-day-of-week {
   font-weight: bold;
 }
-.angularjs-datetime-picker > .adp-days > .adp-day:not([date]) {
+.angularjs-datetime-picker > .adp-days > .adp-day:not(.selectable) {
   opacity: 0.15;
   cursor: default;
 }
-.angularjs-datetime-picker > .adp-days > .adp-day[date]  {
+.angularjs-datetime-picker > .adp-days > .adp-day.selectable  {
   cursor: pointer;
 }
-.angularjs-datetime-picker > .adp-days > .adp-day[date].selected {
+.angularjs-datetime-picker > .adp-days > .adp-day.selected {
   background: #e0e0e0;
 }
-.angularjs-datetime-picker > .adp-days > .adp-day[date]:hover {
+.angularjs-datetime-picker > .adp-days > .adp-day.selectable:hover {
   background: #eee;
 }
 .angularjs-datetime-picker > .adp-days:after {

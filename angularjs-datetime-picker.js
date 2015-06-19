@@ -87,7 +87,7 @@
     '  <div class="adp-days" ng-click="setDate($event)">',
     '    <div class="adp-day-of-week" ng-repeat="dayOfWeek in ::daysOfWeek" title="{{dayOfWeek.fullName}}">{{::dayOfWeek.firstLetter}}</div>',
     '    <div class="adp-day" ng-repeat="day in mv.leadingDays">{{::day}}</div>',
-    '    <div class="adp-day" ng-repeat="day in mv.days" date="{{::mv.year}}-{{::mv.month}}-{{::day}}" ',
+    '    <div class="adp-day selectable" ng-repeat="day in mv.days" ',
     '      ng-class="{selected: (day == selectedDay)}">{{::day}}</div>',
     '    <div class="adp-day" ng-repeat="day in mv.trailingDays">{{::day}}</div>',
     '  </div>',
@@ -147,6 +147,17 @@
       };
     };
 
+    var getTimezoneOffset = function() {
+      var now = new Date();
+      var tzo = -now.getTimezoneOffset();
+      var dif = tzo >= 0 ? '+' : '-';
+      var pad = function(num) {
+        var norm = Math.abs(Math.floor(num));
+        return (norm < 10 ? '0' : '') + norm;
+      };
+      return dif + pad(tzo / 60) + ':' + pad(tzo % 60);
+    };
+
     var linkFunc = function(scope, element, attrs, ctrl) { //jshint ignore:line
       initVars(); //initialize days, months, daysOfWeek, and firstDayOfWeek;
       var dateFormat = attrs.dateFormat || 'short';
@@ -161,7 +172,7 @@
         if (attrs.ngModel) {
           var dateStr = ctrl.triggerEl.scope()[attrs.ngModel];
           if (dateStr) {
-            (dateStr.indexOf(':') == -1) && (dateStr += ' 00:00:00');
+            (dateStr.indexOf(':') == -1) && (dateStr += 'T00:00:00' + getTimezoneOffset());
             scope.selectedDate = new Date(dateStr);
           }
         }
@@ -193,14 +204,20 @@
 
       scope.setDate = function (evt) {
         var target = angular.element(evt.target)[0];
-        if (target.hasAttribute('date')) {
-          scope.inputDate = target.getAttribute('date');
+        if (target.className.indexOf('selectable')) {
+          scope.inputDate = scope.mv.year + '-' +
+            ("0"+scope.mv.month).slice(-2) + '-' + 
+            ('0'+target.innerHTML).slice(-2);
           scope.updateNgModel();
         }
       };
 
       scope.updateNgModel = function() {
-        scope.selectedDate = new Date(scope.inputDate + ' ' + scope.inputHour + ':' + scope.inputMinute);
+        scope.selectedDate = new Date(scope.inputDate + 'T' +
+          ("0"+scope.inputHour).slice(-2) + ':' +
+          ("0"+scope.inputMinute).slice(-2) + ':00' +
+          getTimezoneOffset());
+        console.log(scope.inputDate + 'T' + scope.inputHour + ':' + scope.inputMinute + getTimezoneOffset());
         scope.selectedDay = scope.selectedDate.getDate();
         if (attrs.ngModel) {
           ctrl.triggerEl.scope()[attrs.ngModel] = dateFilter(scope.selectedDate, dateFormat);
