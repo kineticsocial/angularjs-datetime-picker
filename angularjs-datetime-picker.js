@@ -170,7 +170,7 @@
       scope.$applyAsync( function() {
         ctrl.triggerEl = angular.element(element[0].triggerEl);
         if (attrs.ngModel) {
-          var dateStr = ctrl.triggerEl.scope()[attrs.ngModel];
+          var dateStr = ctrl.triggerEl.scope().$eval(attrs.ngModel);
           if (dateStr) {
             (dateStr.indexOf(':') == -1) && (dateStr += 'T00:00:00' + getTimezoneOffset());
             scope.selectedDate = new Date(dateStr);
@@ -220,7 +220,9 @@
         console.log(scope.inputDate + 'T' + scope.inputHour + ':' + scope.inputMinute + getTimezoneOffset());
         scope.selectedDay = scope.selectedDate.getDate();
         if (attrs.ngModel) {
-          ctrl.triggerEl.scope()[attrs.ngModel] = dateFilter(scope.selectedDate, dateFormat);
+          var elScope = ctrl.triggerEl.scope();
+          elScope.$eval(attrs.ngModel + '=' +
+            '"' +dateFilter(scope.selectedDate, dateFormat) + '"');
         }
       };
 
