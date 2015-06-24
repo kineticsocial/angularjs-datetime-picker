@@ -8,7 +8,11 @@
     angular.module('myApp',['angularjs-datetime-picker']);
   </script>
 </head>
-<body ng-app="myApp">
+<body ng-app="myApp" ng-init="
+  date1='2015-01-01 00:00:00';
+  date2='Thu Jan 01 2015 00:00:00 GMT-0500 (EST)';
+  date3='2015-01-01T00:00:00-0400';
+  date4='2015-01-01';">
   <h1>Datetime Picker</h1>
 
   &lt;input ng-model="date4" datetime-picker date-only /> <br/>
@@ -25,8 +29,8 @@
 
 
   <div style="position:fixed; bottom:0">
-    &lt;input ng-model="date5" datetime-picker date-format="yyyy-MM-dd HH:mm:ss" year="2014" month="12" day="31" /><br/>
-    <input ng-model="date5" datetime-picker date-format="yyyy-MM-dd HH:mm:ss"  size="30" year="2014" month="12" day="31" /> <br/> <br/>
+    &lt;input ng-model="date5" datetime-picker date-format="yyyy-MM-dd HH:mm:ss" year="2014" month="12" day="31" hour="23" minute="59" /><br/>
+    <input ng-model="date5" datetime-picker date-format="yyyy-MM-dd HH:mm:ss"  size="30" year="2014" month="12" day="31" hour="23" minute="59" /> <br/> <br/>
   </div>
 
 </body>
