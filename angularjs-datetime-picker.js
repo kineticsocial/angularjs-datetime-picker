@@ -3,6 +3,19 @@
 
   angular.module('angularjs-datetime-picker', []);
 
+  var getTimezoneOffset = function(date) {
+    (typeof date == 'string')  && (date = new Date(date));
+    var jan = new Date(date.getFullYear(), 0, 1);
+    var jul = new Date(date.getFullYear(), 6, 1);
+    var stdTimezoneOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+    var isDST = date.getTimezoneOffset() < stdTimezoneOffset;
+    var offset = isDST ? stdTimezoneOffset - 60 : stdTimezoneOffset;
+    var diff = offset >=0 ? '-' : '+';
+    return diff +
+     ("0"+ (offset / 60)).slice(-2) + ':' +
+     ("0"+ (offset % 60)).slice(-2);
+  };
+
   var DatetimePicker = function($compile, $document, $controller){
     var datetimePickerCtrl = $controller('DatetimePickerCtrl'); //directive controller
     return {
@@ -148,17 +161,6 @@
       };
     };
 
-    var getTimezoneOffset = function() {
-      var now = new Date(); // new Date() has different offset
-      var tzo = -now.getTimezoneOffset();
-      var dif = tzo >= 0 ? '+' : '-';
-      var pad = function(num) {
-        var norm = Math.abs(Math.floor(num));
-        return (norm < 10 ? '0' : '') + norm;
-      };
-      return dif + pad(tzo / 60) + ':' + pad(tzo % 60);
-    };
-
     var linkFunc = function(scope, element, attrs, ctrl) { //jshint ignore:line
       initVars(); //initialize days, months, daysOfWeek, and firstDayOfWeek;
       var dateFormat = attrs.dateFormat || 'short';
@@ -179,6 +181,7 @@
             dateStr = dateStr.replace(/EDT|EST|CDT|CST|MDT|PDT|PST|UT|GMT/g,''); //remove timezone
             dateStr = dateStr.replace(/\s*\(\)\s*/,'');                          //remove timezone
             dateStr = dateStr.replace(/[\-\+][0-9]{2}:?[0-9]{2}/,'');            //remove timezone
+            dateStr += getTimezoneOffset(dateStr);
             console.log('dateStr', dateStr);
             var d = new Date(dateStr);
             scope.selectedDate = new Date(
