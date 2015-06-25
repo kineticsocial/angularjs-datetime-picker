@@ -12,8 +12,8 @@
     var offset = isDST ? stdTimezoneOffset - 60 : stdTimezoneOffset;
     var diff = offset >=0 ? '-' : '+';
     return diff +
-     ("0"+ (offset / 60)).slice(-2) + ':' +
-     ("0"+ (offset % 60)).slice(-2);
+      ("0"+ (offset / 60)).slice(-2) + ':' +
+      ("0"+ (offset % 60)).slice(-2);
   };
 
   var DatetimePicker = function($compile, $document, $controller){
@@ -51,6 +51,9 @@
       if (options.dateOnly === '' || options.dateOnly === true) {
         div.attr('date-only', 'true');
       }
+      if (options.closeOnSelect === 'false') {
+        div.attr('close-on-select', 'false');
+      }
 
       var triggerEl = options.triggerEl;
       options.scope = options.scope || angular.element(triggerEl).scope();
@@ -76,10 +79,12 @@
       var target = evt && evt.target;
       var popupEl = $document[0].querySelector('div[datetime-picker-popup]');
 
-      if (target) {
-        if (target.hasAttribute('datetime-picker'));  // element with datetimePicker behaviour
-        else if (popupEl && popupEl.contains(target)); // datetimePicker itself
-        else {
+      if (evt && target) {
+        if (target.hasAttribute('datetime-picker')) {  // element with datetimePicker behaviour
+          // do nothing
+        } else if (popupEl && popupEl.contains(target)) { // datetimePicker itself
+          // do nothing
+        } else {
           removeEl(popupEl);
         }
       } else {
@@ -182,7 +187,6 @@
             dateStr = dateStr.replace(/\s*\(\)\s*/,'');                          //remove timezone
             dateStr = dateStr.replace(/[\-\+][0-9]{2}:?[0-9]{2}/,'');            //remove timezone
             dateStr += getTimezoneOffset(dateStr);
-            console.log('dateStr', dateStr);
             var d = new Date(dateStr);
             scope.selectedDate = new Date(
               d.getFullYear(),
@@ -223,6 +227,9 @@
         var target = angular.element(evt.target)[0];
         if (target.className.indexOf('selectable')) {
           scope.updateNgModel(parseInt(target.innerHTML));
+          if (scope.closeOnSelect !== false) {
+            ctrl.closeDatetimePicker();
+          }
         }
       };
 
@@ -231,7 +238,6 @@
         scope.selectedDate = new Date(
           scope.mv.year, scope.mv.month, day, scope.inputHour, scope.inputMinute, 0
         );
-        console.log('new date', scope.selectedDate);
         scope.selectedDay = scope.selectedDate.getDate();
         if (attrs.ngModel) {
           var elScope = ctrl.triggerEl.scope();
@@ -253,7 +259,8 @@
         day: '=',
         hour: '=',
         minute: '=',
-        dateOnly: '='
+        dateOnly: '=',
+        closeOnSelect: '='
       },
       link: linkFunc
     };
@@ -274,7 +281,8 @@
             day: attrs.day,
             hour: attrs.hour,
             minute: attrs.minute,
-            dateOnly: attrs.dateOnly
+            dateOnly: attrs.dateOnly,
+            closeOnSelect: attrs.closeOnSelect
           });
         });
       }
