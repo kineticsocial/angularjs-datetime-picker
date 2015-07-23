@@ -40,7 +40,7 @@
 
     this.openDatetimePicker = function(options) {
       this.closeDatetimePicker();
-      var div = angular.element('<div datetime-picker-popup ng-cloak></div');
+      var div = angular.element('<div datetime-picker-popup ng-cloak></div>');
       options.dateFormat && div.attr('date-format', options.dateFormat);
       options.ngModel  && div.attr('ng-model', options.ngModel);
       options.year     && div.attr('year', parseInt(options.year));
@@ -198,6 +198,7 @@
             );
           }
         }
+
         if (!scope.selectedDate || isNaN(scope.selectedDate.getTime())) { // no predefined date
           var today = new Date();
           var year = scope.year || today.getFullYear();
@@ -270,7 +271,23 @@
 
   var datetimePicker  = function($parse, DatetimePicker) {
     return {
-      link: function(scope, element, attrs) {
+      // An ngModel is required to get the controller argument
+      require: 'ngModel',
+      link: function(scope, element, attrs, ctrl) {
+        // Attach validation watcher
+        scope.$watch(attrs.ngModel, function(value) {
+          if( !value || value == '' ){
+            return;
+          }
+          // The value has already been cleaned by the above code
+          var date = new Date(value);
+          ctrl.$setValidity('date', !date? false : true);
+          var now = new Date();
+          if( attrs.hasOwnProperty('futureOnly') ){
+            ctrl.$setValidity('future-only', date < now? false : true);
+          }
+        });
+
         element[0].addEventListener('click', function() {
           DatetimePicker.open({
             triggerEl: element[0],
@@ -282,6 +299,7 @@
             hour: attrs.hour,
             minute: attrs.minute,
             dateOnly: attrs.dateOnly,
+            futureOnly: attrs.futureOnly,
             closeOnSelect: attrs.closeOnSelect
           });
         });
