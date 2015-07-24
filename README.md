@@ -24,7 +24,7 @@ For Bower users,
 
 3. Use it
 
-        <input datetime-picker />
+        <input datetime-picker ng-model="model" />
 
 Attributes
 ------------
@@ -35,12 +35,15 @@ Attributes
   -  day: optiona, day selected, e.g. 31
   -  hour: optional, hour selected, 23
   -  minute: optional, minute selected, 59
-  -  date-only: optional, if set, timepicker will be hidden 
+  -  date-only: optional, if set, timepicker will be hidden
+  -  future-only: optional, if set, forces validation errors on dates earlier than now
 
 Examples
 --------
 
     <input ng-model="date1" datetime-picker date-only />
+
+    <input ng-model="date1" datetime-picker date-only future-only />
 
     <input ng-model="date2" datetime-picker date-format="yyyy-MM-dd" date-only />
 
