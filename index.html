@@ -6,6 +6,9 @@
   <script src="angularjs-datetime-picker.js"></script>
   <script>
     angular.module('myApp',['angularjs-datetime-picker']);
+    angular.module('myApp').run(function($rootScope) {
+      $rootScope.gmtDate = new Date('2015-01-01 00:00:00 -00:00');
+    });
   </script>
 </head>
 <body ng-app="myApp" ng-init="
@@ -27,6 +30,9 @@
   &lt;input ng-model="date4" datetime-picker hour="23" minute='59'/><br/>
   <input ng-model="date4" datetime-picker hour="23" minute='59' size="30" /> <br/> <br/>
 
+  gmtDate : {{gmtDate}}<br/>
+  &lt;input type="date" ng-model="gmtDate" size="30" /><br/>
+  <input type="date" ng-model="gmtDate" datetime-picker date-format="yyyy-MM-dd HH:mm:ss" size="30" />
 
   <div style="position:fixed; bottom:0">
     &lt;input ng-model="date5" datetime-picker date-format="yyyy-MM-dd HH:mm:ss" year="2014" month="12" day="31" hour="23" minute="59" /><br/>
