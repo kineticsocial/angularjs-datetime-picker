@@ -65,20 +65,23 @@
       var bcr = triggerEl.getBoundingClientRect();
       datetimePickerEl.style.position='absolute';
       datetimePickerEl.style.left= (bcr.left + window.scrollX) + 'px';
+
+      options.scope.$apply();
+
+      var datePickerElBcr = datetimePickerEl.getBoundingClientRect();
+
       if (bcr.top < 300 || window.innerHeight - bcr.bottom > 300) {
         datetimePickerEl.style.top = (bcr.bottom + window.scrollY) + 'px';
       } else {
-        datetimePickerEl.style.bottom = (window.innerHeight - bcr.top + window.scrollY) + 'px';
+        datetimePickerEl.style.top = (bcr.top - datePickerElBcr.height + window.scrollY) + 'px';
       }
 
-      options.scope.$applyAsync();
       $document[0].body.addEventListener('click', this.closeDatetimePicker);
     };
 
     this.closeDatetimePicker = function(evt) {
       var target = evt && evt.target;
       var popupEl = $document[0].querySelector('div[datetime-picker-popup]');
-
       if (evt && target) {
         if (target.hasAttribute('datetime-picker')) {  // element with datetimePicker behaviour
           // do nothing
@@ -253,7 +256,7 @@
         }
       };
 
-      scope.$on('$destroy', ctrl.closeDatetimePicker); 
+      scope.$on('$destroy', ctrl.closeDatetimePicker);
     };
 
     return {
