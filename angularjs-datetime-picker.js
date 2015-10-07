@@ -60,11 +60,6 @@
       datetimePickerEl = $compile(div)(options.scope)[0];
       datetimePickerEl.triggerEl = options.triggerEl;
 
-      // Hide the time selection if dateOnly is not set.
-      if (options.dateOnly === '' || options.dateOnly === true){
-        datetimePickerEl.querySelector('#adp-time').style.display = 'none';
-      }
-
       $document[0].body.appendChild(datetimePickerEl);
 
       //show datetimePicker below triggerEl
@@ -182,6 +177,10 @@
       scope.daysOfWeek = daysOfWeek;
       scope.inputHour;
       scope.inputMinute;
+
+      if (scope.dateOnly === true){
+        element[0].querySelector('#adp-time').style.display = 'none';
+      }
 
       scope.$applyAsync( function() {
         ctrl.triggerEl = angular.element(element[0].triggerEl);
