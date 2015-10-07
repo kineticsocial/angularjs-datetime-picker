@@ -59,6 +59,12 @@
       options.scope = options.scope || angular.element(triggerEl).scope();
       datetimePickerEl = $compile(div)(options.scope)[0];
       datetimePickerEl.triggerEl = options.triggerEl;
+
+      // Hide the time selection if dateOnly is not set.
+      if (options.dateOnly === '' || options.dateOnly === true){
+        datetimePickerEl.querySelector('#adp-time').style.display = 'none';
+      }
+
       $document[0].body.appendChild(datetimePickerEl);
 
       //show datetimePicker below triggerEl
@@ -112,7 +118,7 @@
     '      ng-class="{selected: (day == selectedDay)}">{{::day}}</div>',
     '    <div class="adp-day" ng-repeat="day in mv.trailingDays">{{::day}}</div>',
     '  </div>',
-    '  <div class="adp-days" ng-show="::!dateOnly"> ',
+    '  <div class="adp-days" id="adp-time"> ',
     '    Time : {{("0"+inputHour).slice(-2)}} : {{("0"+inputMinute).slice(-2)}} <br/>',
     '    <label>Hour:</label> <input type="range" min="0" max="23" ng-model="inputHour" ng-change="updateNgModel()" />',
     '    <label>Min.:</label> <input type="range" min="0" max="59" ng-model="inputMinute"  ng-change="updateNgModel()"/> ',
