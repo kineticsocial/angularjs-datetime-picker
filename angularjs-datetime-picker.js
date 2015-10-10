@@ -148,6 +148,11 @@
     };
 
     var getMonthView = function(year, month) {
+      if (month>11) {
+        year++;
+      } else if (month < 0) {
+        year--;
+      }
       month = (month + 12) % 12;
       var firstDayOfMonth = new Date(year, month, 1),
         lastDayOfMonth = new Date(year, month + 1, 0),
@@ -250,7 +255,7 @@
         );
         scope.selectedDay = scope.selectedDate.getDate();
         if (attrs.ngModel) {
-          console.log('attrs.ngModel',attrs.ngModel);
+          //console.log('attrs.ngModel',attrs.ngModel);
           var elScope = ctrl.triggerEl.scope(), dateValue;
           if (elScope.$eval(attrs.ngModel) && elScope.$eval(attrs.ngModel).constructor.name === 'Date') {
             dateValue = new Date(dateFilter(scope.selectedDate, dateFormat));
