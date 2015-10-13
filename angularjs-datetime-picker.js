@@ -30,7 +30,7 @@
   DatetimePicker.$inject = ['$compile', '$document', '$controller'];
   angular.module('angularjs-datetime-picker').factory('DatetimePicker', DatetimePicker);
 
-  var DatetimePickerCtrl = function($compile, $document, dateFilter) {
+  var DatetimePickerCtrl = function($compile, $document) {
     var datetimePickerEl;
     var _this = this;
     var removeEl = function(el) {
@@ -64,12 +64,18 @@
 
       //show datetimePicker below triggerEl
       var bcr = triggerEl.getBoundingClientRect();
-      datetimePickerEl.style.position='absolute';
-      datetimePickerEl.style.left= (bcr.left + window.scrollX) + 'px';
+
 
       options.scope.$apply();
 
       var datePickerElBcr = datetimePickerEl.getBoundingClientRect();
+
+      datetimePickerEl.style.position='absolute';
+      if(bcr.width > datePickerElBcr.width){
+        datetimePickerEl.style.left= (bcr.left + bcr.width - datePickerElBcr.width + window.scrollX) + 'px';
+      } else {
+        datetimePickerEl.style.left= (bcr.left + window.scrollX) + 'px';
+      }
 
       if (bcr.top < 300 || window.innerHeight - bcr.bottom > 300) {
         datetimePickerEl.style.top = (bcr.bottom + window.scrollY) + 'px';
@@ -148,7 +154,7 @@
 
         daysOfWeek.push({
           fullName: day,
-          firstLetter: day.substr(0, 2)
+          firstLetter: day.substr(0, 1)
         });
       }
       firstDayOfWeek = $locale.DATETIME_FORMATS.FIRSTDAYOFWEEK || 0;
