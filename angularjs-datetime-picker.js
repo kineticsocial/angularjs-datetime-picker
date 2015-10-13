@@ -240,7 +240,7 @@
 
       scope.setDate = function (evt) {
         var target = angular.element(evt.target)[0];
-        if (target.className.indexOf('selectable')) {
+        if (target.className.indexOf('selectable') !== -1) {
           scope.updateNgModel(parseInt(target.innerHTML));
           if (scope.closeOnSelect !== false) {
             ctrl.closeDatetimePicker();
