@@ -30,7 +30,7 @@
   DatetimePicker.$inject = ['$compile', '$document', '$controller'];
   angular.module('angularjs-datetime-picker').factory('DatetimePicker', DatetimePicker);
 
-  var DatetimePickerCtrl = function($compile, $document) {
+  var DatetimePickerCtrl = function($compile, $document, dateFilter) {
     var datetimePickerEl;
     var _this = this;
     var removeEl = function(el) {
@@ -108,15 +108,22 @@
     '  </div>',
     '  <div class="adp-days" ng-click="setDate($event)">',
     '    <div class="adp-day-of-week" ng-repeat="dayOfWeek in ::daysOfWeek" title="{{dayOfWeek.fullName}}">{{::dayOfWeek.firstLetter}}</div>',
-    '    <div class="adp-day" ng-repeat="day in mv.leadingDays">{{::day}}</div>',
+    '    <div class="adp-day" ng-show="mv.leadingDays.length < 7" ng-repeat="day in mv.leadingDays">{{::day}}</div>',
     '    <div class="adp-day selectable" ng-repeat="day in mv.days" ',
-    '      ng-class="{selected: (day == selectedDay)}">{{::day}}</div>',
-    '    <div class="adp-day" ng-repeat="day in mv.trailingDays">{{::day}}</div>',
+    '      today="{{today}}" d2="{{mv.year + \'-\' + (mv.month + 1) + \'-\' + day}}"',
+    '      ng-class="{',
+    '        selected: (day == selectedDay),',
+    '        today: (today == (mv.year + \'-\' + (mv.month + 1) + \'-\' + day)),',
+    '        weekend: (mv.leadingDays.length + day)%7 == 1 || (mv.leadingDays.length + day)%7 == 0',
+    '      }">',
+    '      {{::day}}',
+    '    </div>',
+    '    <div class="adp-day" ng-show="mv.trailingDays.length < 7" ng-repeat="day in mv.trailingDays">{{::day}}</div>',
     '  </div>',
     '  <div class="adp-days" id="adp-time"> ',
-    '    Time : {{("0"+inputHour).slice(-2)}} : {{("0"+inputMinute).slice(-2)}} <br/>',
-    '    <label>Hour:</label> <input type="range" min="0" max="23" ng-model="inputHour" ng-change="updateNgModel()" />',
-    '    <label>Min.:</label> <input type="range" min="0" max="59" ng-model="inputMinute"  ng-change="updateNgModel()"/> ',
+    '    <label class="timeLabel">Time:</label> <span class="timeValue">{{("0"+inputHour).slice(-2)}} : {{("0"+inputMinute).slice(-2)}} <br/>',
+    '    <label class="hourLabel">Hour:</label> <input class="hourInput" type="range" min="0" max="23" ng-model="inputHour" ng-change="updateNgModel()" />',
+    '    <label class="minutesLabel">Min:</label><input class="minutesInput" type="range" min="0" max="59" ng-model="inputMinute"  ng-change="updateNgModel()"/> ',
     '  </div> ',
     '</div>'].join("\n");
 
@@ -227,6 +234,7 @@
 
         // Default to current year and month
         scope.mv = getMonthView(scope.selectedDate.getFullYear(), scope.selectedDate.getMonth());
+        scope.today = dateFilter(new Date(), 'yyyy-M-d');
         if (scope.mv.year == scope.selectedDate.getFullYear() && scope.mv.month == scope.selectedDate.getMonth()) {
           scope.selectedDay = scope.selectedDate.getDate();
         } else {
