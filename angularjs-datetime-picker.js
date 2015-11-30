@@ -157,7 +157,8 @@
           firstLetter: day.substr(0, 1)
         });
       }
-      firstDayOfWeek = $locale.DATETIME_FORMATS.FIRSTDAYOFWEEK || 0;
+      //firstDayOfWeek = $locale.DATETIME_FORMATS.FIRSTDAYOFWEEK || 0;
+      firstDayOfWeek = 0;
     };
 
     var getMonthView = function(year, month) {
