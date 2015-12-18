@@ -1,4 +1,4 @@
-Simple DateTime Piker For AngularJS
+Simple DateTime Picker For AngularJS
 ===================================
 
 No JQuery, No Bootstrap, Just AngularJS (ver. 1.3+)
