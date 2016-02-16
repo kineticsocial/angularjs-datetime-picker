@@ -1,6 +1,9 @@
 {
   "name": "angularjs-datetime-picker",
-  "main": "angularjs-datetime-picker.js",
+  "main": [
+    "angularjs-datetime-picker.js",
+    "angularjs-datetime-picker.css"
+  ],
   "version": "0.1.20",
   "homepage": "https://github.com/kineticsocial/angularjs-datetime-picker",
   "authors": [
