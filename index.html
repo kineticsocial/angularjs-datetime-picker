@@ -6,17 +6,36 @@
   <script src="angularjs-datetime-picker.js"></script>
   <script>
     angular.module('myApp',['angularjs-datetime-picker']);
-    angular.module('myApp').run(function($rootScope) {
+    angular.module('myApp').run(function($rootScope, dateFilter) {
       $rootScope.gmtDate = new Date('2015-01-01 00:00:00 -00:00');
+      $rootScope.ddMMMyyyy = function() {
+        return dateFilter(this, 'dd-MMM-yyyy');
+      }
+      $rootScope.myFormat = function(str) {
+        var arr = str.split("-");
+        var day=arr[0], month=arr[1], year=arr[2];
+        var months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+        var MONTH = months.indexOf(month)+1;
+        MONTH = MONTH > 10 ? MONTH : '0'+MONTH;
+        return year +'-'+MONTH+'-'+day;
+      }
     });
   </script>
 </head>
 <body ng-app="myApp" ng-init="
+  date0='01-MAY-2015';
   date1='01-01-2015 00:00:00';
   date2='Thu Jan 01 2015 00:00:00 GMT-0500 (EST)';
   date3='2015-01-01T00:00:00-0400';
   date4='2015-01-01';">
   <h1>Datetime Picker</h1>
+
+  &lt;input ng-model="date0" datetime-picker date-only /> <br/>
+  <input ng-model="date0"
+    internal-date-formatter='myFormat'
+    uppercase="true"
+    date-format="dd-MMM-yyyy"
+    datetime-picker date-only size="30" /> <br/> <br/>
 
   &lt;input ng-model="date4" datetime-picker date-only /> <br/>
   <input ng-model="date1" datetime-picker date-only size="30" /> <br/> <br/>

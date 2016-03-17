@@ -42,12 +42,15 @@
       this.closeDatetimePicker();
       var div = angular.element('<div datetime-picker-popup ng-cloak></div>');
       options.dateFormat && div.attr('date-format', options.dateFormat);
+      options.uppercase && div.attr('uppercase', options.uppercase);
       options.ngModel  && div.attr('ng-model', options.ngModel);
       options.year     && div.attr('year', parseInt(options.year));
       options.month    && div.attr('month', parseInt(options.month));
       options.day      && div.attr('day', parseInt(options.day));
       options.hour     && div.attr('hour', parseInt(options.hour));
       options.minute   && div.attr('minute', parseInt(options.minute));
+      options.internalDateFormatter &&
+        div.attr('internal-date-formatter', options.internalDateFormatter);
       if (options.dateOnly === '' || options.dateOnly === true) {
         div.attr('date-only', 'true');
       }
@@ -191,6 +194,8 @@
     var linkFunc = function(scope, element, attrs, ctrl) { //jshint ignore:line
       initVars(); //initialize days, months, daysOfWeek, and firstDayOfWeek;
       var dateFormat = attrs.dateFormat || 'short';
+      console.log('scope', scope);
+      scope.uppercase = attrs.uppercase; 
       scope.months = months;
       scope.daysOfWeek = daysOfWeek;
       scope.inputHour;
@@ -204,6 +209,9 @@
         ctrl.triggerEl = angular.element(element[0].triggerEl);
         if (attrs.ngModel) { // need to parse date string
           var dateStr = ''+ctrl.triggerEl.scope().$eval(attrs.ngModel);
+          if (scope.internalDateFormatter) {
+            dateStr = scope.internalDateFormatter(dateStr);
+          }
           if (dateStr) {
             if (!dateStr.match(/[0-9]{2}:/)) {  // if no time is given, add 00:00:00 at the end
               dateStr += " 00:00:00";
@@ -276,6 +284,10 @@
           } else {
             dateValue = dateFilter(scope.selectedDate, dateFormat);
           }
+          console.log('upp', scope.uppercase)
+          if (scope.uppercase) {
+            dateValue = dateValue.toUpperCase();
+          }
           elScope.$eval(attrs.ngModel + '= date', {date: dateValue});
         }
       };
@@ -295,6 +307,7 @@
         hour: '=',
         minute: '=',
         dateOnly: '=',
+        internalDateFormatter: '=',
         closeOnSelect: '='
       },
       link: linkFunc
@@ -326,6 +339,7 @@
           DatetimePicker.open({
             triggerEl: element[0],
             dateFormat: attrs.dateFormat,
+            uppercase: attrs.uppercase,
             ngModel: attrs.ngModel,
             year: attrs.year,
             month: attrs.month,
@@ -334,6 +348,7 @@
             minute: attrs.minute,
             dateOnly: attrs.dateOnly,
             futureOnly: attrs.futureOnly,
+            internalDateFormatter: attrs.internalDateFormatter,
             closeOnSelect: attrs.closeOnSelect
           });
         });
