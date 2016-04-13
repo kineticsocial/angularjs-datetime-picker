@@ -295,7 +295,8 @@
         hour: '=',
         minute: '=',
         dateOnly: '=',
-        closeOnSelect: '='
+        closeOnSelect: '=',
+        bindEvent: '='
       },
       link: linkFunc
     };
@@ -322,7 +323,10 @@
           }
         });
 
-        element[0].addEventListener('click', function() {
+        // Checking the bindEvent attr, click event is the default
+        var bEvent = (attrs.bindEvent && attrs.bindEvent != undefined) ? attrs.bindEvent : 'click';
+
+        element[0].addEventListener(bEvent, function() {
           DatetimePicker.open({
             triggerEl: element[0],
             dateFormat: attrs.dateFormat,
