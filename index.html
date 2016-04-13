@@ -21,11 +21,11 @@
   &lt;input ng-model="date4" datetime-picker date-only /> <br/>
   <input ng-model="date1" datetime-picker date-only size="30" /> <br/> <br/>
 
-  &lt;input ng-model="date2" datetime-picker date-format="yyyy-MM-dd" date-only /> <br/>
-  <input ng-model="date2" datetime-picker date-format="yyyy-MM-dd" size="30"  date-only /> <br/> <br/> <br/>
+  &lt;input ng-model="date2" datetime-picker bind-event="focus" date-format="yyyy-MM-dd" date-only /> <br/>
+  <input ng-model="date2" datetime-picker bind-event="focus" date-format="yyyy-MM-dd" size="30"  date-only /> <br/> <br/> <br/>
 
-  &lt;input ng-model="date3" datetime-picker date-format="yyyy-MM-dd HH:mm:ss" close-on-select="false" /> <br/>
-  <input ng-model="date3" datetime-picker date-format="yyyy-MM-dd HH:mm:ss" close-on-select="false" size="30" /> <br/> <br/>
+  &lt;input ng-model="date3" datetime-picker bind-event="dblclick" date-format="yyyy-MM-dd HH:mm:ss" close-on-select="false" /> <br/>
+  <input ng-model="date3" datetime-picker bind-event="dblclick" date-format="yyyy-MM-dd HH:mm:ss" close-on-select="false" size="30" /> <br/> <br/>
 
   &lt;input ng-model="date4" datetime-picker hour="23" minute='59'/><br/>
   <input ng-model="date4" datetime-picker hour="23" minute='59' size="30" /> <br/> <br/>
