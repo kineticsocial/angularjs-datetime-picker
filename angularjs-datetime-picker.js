@@ -43,6 +43,7 @@
       var div = angular.element('<div datetime-picker-popup ng-cloak></div>');
       options.dateFormat && div.attr('date-format', options.dateFormat);
       options.ngModel  && div.attr('ng-model', options.ngModel);
+	  options.ngChange && div.attr('ng-change', options.ngChange);
       options.year     && div.attr('year', parseInt(options.year));
       options.month    && div.attr('month', parseInt(options.month));
       options.day      && div.attr('day', parseInt(options.day));
@@ -295,7 +296,8 @@
         hour: '=',
         minute: '=',
         dateOnly: '=',
-        closeOnSelect: '='
+        closeOnSelect: '=',
+		ngChange: '=?'
       },
       link: linkFunc
     };
@@ -320,6 +322,8 @@
           if( attrs.hasOwnProperty('futureOnly') ){
             ctrl.$setValidity('future-only', date < now? false : true);
           }
+		  
+		  ctrl.$setViewValue(value);
         });
 
         element[0].addEventListener('click', function() {
@@ -327,6 +331,7 @@
             triggerEl: element[0],
             dateFormat: attrs.dateFormat,
             ngModel: attrs.ngModel,
+			ngChange: attrs.ngChange,
             year: attrs.year,
             month: attrs.month,
             day: attrs.day,
