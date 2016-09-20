@@ -37,6 +37,7 @@ Attributes
   -  minute: optional, minute selected, 59
   -  date-only: optional, if set, timepicker will be hidden
   -  future-only: optional, if set, forces validation errors on dates earlier than now
+  -  field-id: optional, if set, when setDate() is called, emits a 'datetime-picker-changed' event with the id and the new date value
 
 Examples
 --------

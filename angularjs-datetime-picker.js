@@ -54,6 +54,9 @@
       if (options.closeOnSelect === 'false') {
         div.attr('close-on-select', 'false');
       }
+      if (options.fieldId){
+        div.attr('field-id', options.fieldId);
+      }
 
       var triggerEl = options.triggerEl;
       options.scope = options.scope || angular.element(triggerEl).scope();
@@ -64,7 +67,6 @@
 
       //show datetimePicker below triggerEl
       var bcr = triggerEl.getBoundingClientRect();
-
 
       options.scope.$apply();
 
@@ -269,14 +271,24 @@
         );
         scope.selectedDay = scope.selectedDate.getDate();
         if (attrs.ngModel) {
-          //console.log('attrs.ngModel',attrs.ngModel);
           var elScope = ctrl.triggerEl.scope(), dateValue;
+          
           if (elScope.$eval(attrs.ngModel) && elScope.$eval(attrs.ngModel).constructor.name === 'Date') {
             dateValue = new Date(dateFilter(scope.selectedDate, dateFormat));
           } else {
             dateValue = dateFilter(scope.selectedDate, dateFormat);
           }
           elScope.$eval(attrs.ngModel + '= date', {date: dateValue});
+          
+          // Emit event as ng-change does not trigger programmatically 
+          if (scope.fieldId && scope.fieldId.length > 0)
+          {
+            scope.$emit('datetime-picker-changed', 
+            {
+                id: scope.fieldId,
+                date: dateValue
+            });
+          }
         }
       };
 
@@ -295,7 +307,8 @@
         hour: '=',
         minute: '=',
         dateOnly: '=',
-        closeOnSelect: '='
+        closeOnSelect: '=',
+        fieldId: '@?'
       },
       link: linkFunc
     };
@@ -334,7 +347,8 @@
             minute: attrs.minute,
             dateOnly: attrs.dateOnly,
             futureOnly: attrs.futureOnly,
-            closeOnSelect: attrs.closeOnSelect
+            closeOnSelect: attrs.closeOnSelect,
+            fieldId: attrs.fieldId
           });
         });
       }
