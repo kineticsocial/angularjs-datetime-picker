@@ -231,8 +231,8 @@
           var year = scope.year || today.getFullYear();
           var month = scope.month ? (scope.month-1) : today.getMonth();
           var day = scope.day || today.getDate();
-          var hour = scope.hour || today.getHours();
-          var minute = scope.minute || today.getMinutes();
+          var hour = scope.hour || scope.hour === 0 ? scope.hour : today.getHours();
+          var minute = scope.minute || scope.minute === 0 ? scope.minute : today.getMinutes();
           scope.selectedDate = new Date(year, month, day, hour, minute, 0);
         }
         scope.inputHour   = scope.selectedDate.getHours();
