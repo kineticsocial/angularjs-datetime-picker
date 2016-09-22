@@ -1,10 +1,13 @@
-Simple DateTime Picker For AngularJS
+Extended version of Kinetic Social's 'Simple DateTime Picker For AngularJS'
 ===================================
 
 No JQuery, No Bootstrap, Just AngularJS (ver. 1.3+)
 
+[Original](https://github.com/kineticsocial/angularjs-datetime-picker)
 [DEMO](https://rawgit.com/kineticsocial/angularjs-datetime-picker/master/index.html)
 [![Imgur](http://i.imgur.com/UJfYMN6.png?1)](https://rawgit.com/kineticsocial/angularjs-datetime-picker/master/index.html)
+
+NOTE: This fork introduces an event emit when setDate has completed that emit's the id and date value to parent scopes.
 
 To Get Started
 --------------

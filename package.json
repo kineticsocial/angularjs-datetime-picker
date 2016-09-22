@@ -1,14 +1,14 @@
 {
-  "name": "angularjs-datetime-picker",
+  "name": "extended-angularjs-datetime-picker",
   "version": "0.1.20",
-  "description": "Very Lightweight AngularJS DateTime Picker Without Using jQuery, bootStrap, or moment",
+  "description": "Extended version of KineticSocial's DateTime Picker library",
   "main": "angularjs-datetime-picker.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kineticsocial/angularjs-datetime-picker.git"
+    "url": "https://github.com/megangoodwin/extended-angularjs-datetime-picker.git"
   },
   "keywords": [
     "angularjs",
@@ -16,10 +16,10 @@
     "date",
     "datetime"
   ],
-  "author": "Allen Kim <allenhwkim@gmail.com>",
+  "author": "Allen Kim <allenhwkim@gmail.com>, Megan Goodwin <megoodwin@live.co.uk>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kineticsocial/angularjs-datetime-picker/issues"
+    "url": "https://github.com/megangoodwin/extended-angularjs-datetime-picker/issues"
   },
   "devDependencies": {
     "gulp": "^3.8.11",
@@ -30,5 +30,5 @@
     "gulp-uglify": "^1.2.0",
     "run-sequence": "^1.1.0"
   },
-  "homepage": "https://github.com/kineticsocial/angularjs-datetime-picker"
+  "homepage": "https://github.com/megangoodwin/extended-angularjs-datetime-picker"
 }
