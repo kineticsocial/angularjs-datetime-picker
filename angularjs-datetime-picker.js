@@ -128,8 +128,8 @@
     '  </div>',
     '  <div class="adp-days" id="adp-time"> ',
     '    <label class="timeLabel">Time:</label> <span class="timeValue">{{("0"+inputHour).slice(-2)}} : {{("0"+inputMinute).slice(-2)}}</span><br/>',
-    '    <label class="hourLabel">Hour:</label> <input class="hourInput" type="range" min="0" max="23" ng-model="inputHour" ng-change="updateNgModel()" />',
-    '    <label class="minutesLabel">Min:</label> <input class="minutesInput" type="range" min="0" max="59" ng-model="inputMinute"  ng-change="updateNgModel()"/> ',
+    '    <label class="hourLabel">Hour:</label> <input class="hourInput" type="range" min="0" max="23" ng-model="inputHour" ng-change="updateNgModel(selectedDay)" />',
+    '    <label class="minutesLabel">Min:</label> <input class="minutesInput" type="range" min="0" max="59" ng-model="inputMinute"  ng-change="updateNgModel(selectedDay)"/> ',
     '  </div> ',
     '</div>'].join("\n");
 
@@ -239,6 +239,9 @@
         scope.inputMinute = scope.selectedDate.getMinutes();
 
         // Default to current year and month
+        var elScope = ctrl.triggerEl.scope();
+        var preSelectedDate = dateFilter(elScope.$eval(attrs.ngModel), dateFormat);
+        scope.selectedDate = preSelectedDate ? new Date(preSelectedDate) : scope.selectedDate;
         scope.mv = getMonthView(scope.selectedDate.getFullYear(), scope.selectedDate.getMonth());
         scope.today = dateFilter(new Date(), 'yyyy-M-d');
         if (scope.mv.year == scope.selectedDate.getFullYear() && scope.mv.month == scope.selectedDate.getMonth()) {
