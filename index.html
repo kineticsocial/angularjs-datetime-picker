@@ -12,14 +12,17 @@
   </script>
 </head>
 <body ng-app="myApp" ng-init="
-  date1='01-01-2015 00:00:00';
+  date0='01-01-2015 00:00:00';
   date2='Thu Jan 01 2015 00:00:00 GMT-0500 (EST)';
   date3='2015-01-01T00:00:00-0400';
   date4='2015-01-01';">
   <h1>Datetime Picker</h1>
 
-  &lt;input ng-model="date4" datetime-picker date-only /> <br/>
-  <input ng-model="date1" datetime-picker date-only size="30" /> <br/> <br/>
+  &lt;input ng-model="date0" datetime-picker date-only /> <br/>
+  <input ng-model="date0" datetime-picker date-only size="30" /> <br/> <br/>
+
+  &lt;input ng-model="date1" datetime-picker date-only future-only /> <br/>
+  <input ng-model="date1" datetime-picker date-only future-only size="30" /> <br/> <br/>
 
   &lt;input ng-model="date2" datetime-picker date-format="yyyy-MM-dd" date-only /> <br/>
   <input ng-model="date2" datetime-picker date-format="yyyy-MM-dd" size="30"  date-only /> <br/> <br/> <br/>

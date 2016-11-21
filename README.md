@@ -32,16 +32,16 @@ Attributes
   -  date-format: optional, date format e.g. 'yyyy-MM-dd'
   -  year: optional, year selected, e.g. 2015
   -  month: optional, month selected, e.g. 5
-  -  day: optiona, day selected, e.g. 31
+  -  day: optional, day selected, e.g. 31
   -  hour: optional, hour selected, 23
   -  minute: optional, minute selected, 59
   -  date-only: optional, if set, timepicker will be hidden
-  -  future-only: optional, if set, forces validation errors on dates earlier than now
+  -  future-only: optional, if set, Date which is older than today's Date will be not be selectable (Past time for same date is not handled)
 
 Examples
 --------
 
-    <input ng-model="date1" datetime-picker date-only />
+    <input ng-model="date0" datetime-picker date-only />
 
     <input ng-model="date1" datetime-picker date-only future-only />
 

@@ -51,6 +51,9 @@
       if (options.dateOnly === '' || options.dateOnly === true) {
         div.attr('date-only', 'true');
       }
+      if (options.futureOnly === '' || options.futureOnly === true) {
+        div.attr('future-only', 'true');
+      }
       if (options.closeOnSelect === 'false') {
         div.attr('close-on-select', 'false');
       }
@@ -115,9 +118,10 @@
     '  <div class="adp-days" ng-click="setDate($event)">',
     '    <div class="adp-day-of-week" ng-repeat="dayOfWeek in ::daysOfWeek" title="{{dayOfWeek.fullName}}">{{::dayOfWeek.firstLetter}}</div>',
     '    <div class="adp-day" ng-show="mv.leadingDays.length < 7" ng-repeat="day in mv.leadingDays">{{::day}}</div>',
-    '    <div class="adp-day selectable" ng-repeat="day in mv.days" ',
+    '    <div class="adp-day" ng-repeat="day in mv.days" ',
     '      today="{{today}}" d2="{{mv.year + \'-\' + (mv.month + 1) + \'-\' + day}}"',
     '      ng-class="{',
+    '        selectable: !futureOnly || (futureOnly && mv.year > todayDate.year) || (futureOnly && mv.year >= todayDate.year && mv.month > todayDate.month) || (futureOnly && mv.year >= todayDate.year && mv.month >= todayDate.month && day >= todayDate.day),',
     '        selected: (day == selectedDay),',
     '        today: (today == (mv.year + \'-\' + (mv.month + 1) + \'-\' + day)),',
     '        weekend: (mv.leadingDays.length + day)%7 == 1 || (mv.leadingDays.length + day)%7 == 0',
@@ -226,8 +230,8 @@
           }
         }
 
+        var today = new Date();
         if (!scope.selectedDate || isNaN(scope.selectedDate.getTime())) { // no predefined date
-          var today = new Date();
           var year = scope.year || today.getFullYear();
           var month = scope.month ? (scope.month-1) : today.getMonth();
           var day = scope.day || today.getDate();
@@ -243,12 +247,18 @@
         var preSelectedDate = dateFilter(elScope.$eval(attrs.ngModel), dateFormat);
         scope.selectedDate = preSelectedDate ? new Date(preSelectedDate) : scope.selectedDate;
         scope.mv = getMonthView(scope.selectedDate.getFullYear(), scope.selectedDate.getMonth());
-        scope.today = dateFilter(new Date(), 'yyyy-M-d');
+        scope.today = dateFilter(today, 'yyyy-M-d');
         if (scope.mv.year == scope.selectedDate.getFullYear() && scope.mv.month == scope.selectedDate.getMonth()) {
           scope.selectedDay = scope.selectedDate.getDate();
         } else {
           scope.selectedDay = null;
         }
+        scope.todayDate = {
+          day: today.getDate(),
+          month: today.getMonth(),
+          year: today.getFullYear()
+        };
+        scope.futureOnly = attrs.futureOnly;
       });
 
       scope.addMonth = function (amount) {
