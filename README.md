@@ -37,6 +37,7 @@ Attributes
   -  minute: optional, minute selected, 59
   -  date-only: optional, if set, timepicker will be hidden
   -  future-only: optional, if set, Date which is older than today's Date will be not be selectable (Past time for same date is not handled)
+  -  start-date & end-date: optional, if set, date which is in between the range will only be selectable. future-only tag has more precedence than date range feature, date range feature will not work if future-only tag is enabled
 
 Examples
 --------

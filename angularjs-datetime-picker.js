@@ -53,6 +53,9 @@
       }
       if (options.futureOnly === '' || options.futureOnly === true) {
         div.attr('future-only', 'true');
+      } else {
+        options.startDate  && div.attr('start-date', options.startDate);
+        options.endDate  && div.attr('end-date', options.endDate);
       }
       if (options.closeOnSelect === 'false') {
         div.attr('close-on-select', 'false');
@@ -121,7 +124,7 @@
     '    <div class="adp-day" ng-repeat="day in mv.days" ',
     '      today="{{today}}" d2="{{mv.year + \'-\' + (mv.month + 1) + \'-\' + day}}"',
     '      ng-class="{',
-    '        selectable: !futureOnly || (futureOnly && mv.year > todayDate.year) || (futureOnly && mv.year >= todayDate.year && mv.month > todayDate.month) || (futureOnly && mv.year >= todayDate.year && mv.month >= todayDate.month && day >= todayDate.day),',
+    '        selectable: isDateSelectable(day, mv.month, mv.year),',
     '        selected: (day == selectedDay),',
     '        today: (today == (mv.year + \'-\' + (mv.month + 1) + \'-\' + day)),',
     '        weekend: (mv.leadingDays.length + day)%7 == 1 || (mv.leadingDays.length + day)%7 == 0',
@@ -253,12 +256,24 @@
         } else {
           scope.selectedDay = null;
         }
-        scope.todayDate = {
-          day: today.getDate(),
-          month: today.getMonth(),
-          year: today.getFullYear()
+        
+        scope.isDateSelectable = function (day, month, year) {
+          var someday = new Date((month+1) + '-' + day + '-' + year);
+          someday.setHours(0,0,0,0);
+          if (attrs.futureOnly) {
+            var today = new Date();
+            today.setHours(0,0,0,0);
+            return someday >= today;
+          } else if (!isNaN(Date.parse(attrs.startDate)) && !isNaN(Date.parse(attrs.endDate))) {
+            var startDate = new Date(attrs.startDate);
+            var endDate = new Date(attrs.endDate);
+            startDate.setHours(0,0,0,0);
+            endDate.setHours(0,0,0,0);
+            return startDate <= someday && someday <= endDate;
+          } else {
+            return true;
+          }
         };
-        scope.futureOnly = attrs.futureOnly;
       });
 
       scope.addMonth = function (amount) {
@@ -347,6 +362,8 @@
             minute: attrs.minute,
             dateOnly: attrs.dateOnly,
             futureOnly: attrs.futureOnly,
+            startDate: attrs.startDate,
+            endDate: attrs.endDate,
             closeOnSelect: attrs.closeOnSelect
           });
         });
