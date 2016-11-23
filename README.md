@@ -9,9 +9,9 @@ No JQuery, No Bootstrap, Just AngularJS (ver. 1.4+)
 To Get Started
 --------------
 
-For Bower users,
+For npm users,
 
-  `$ bower install angularjs-datetime-picker`
+  `$ npm i angularjs-datetime-picker-v0.2.0`
 
 1. Include `angularjs-datetime-picker.js` and `angularjs-datetime-picker.css`
 
