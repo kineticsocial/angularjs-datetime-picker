@@ -8,6 +8,6 @@ gulp.task('build', function() {
   return gulp.src(['angularjs-datetime-picker.js'])
     .pipe(stripDebug())
     .pipe(uglify())
-    .pipe(rename('angularjs-datetime-picker-v0.2.0.min.js'))
+    .pipe(rename('angularjs-datetime-picker.min.js'))
     .pipe(gulp.dest('.'));
 });
