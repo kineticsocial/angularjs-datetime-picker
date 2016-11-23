@@ -1,7 +1,7 @@
-Simple DateTime Picker For AngularJS
-===================================
+Simple Date / DateTime Picker For AngularJS
+===========================================
 
-No JQuery, No Bootstrap, Just AngularJS (ver. 1.3+)
+No JQuery, No Bootstrap, Just AngularJS (ver. 1.4+)
 
 [DEMO](https://rawgit.com/mani-s17/angularjs-datetime-picker/master/index.html)
 [![Imgur](http://i.imgur.com/UJfYMN6.png?1)](https://rawgit.com/mani-s17/angularjs-datetime-picker/master/index.html)
@@ -64,3 +64,6 @@ Examples
 
     <input ng-model="date5" datetime-picker date-format="yyyy-MM-dd HH:mm:ss" year="2014" month="12" day="31" />
 
+
+This project has been forked from [KineticSocial-angularjs-datetime-picker](https://github.com/kineticsocial/angularjs-datetime-picker) an inactive project.
+We are actively working on this project to enhance & fix issues.
