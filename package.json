@@ -1,5 +1,5 @@
 {
-  "name": "angularjs-datetime-picker-v0.2.0",
+  "name": "angularjs-datetime-picker-v2",
   "version": "0.2.0",
   "description": "Very Lightweight AngularJS DateTime Picker Without Using jQuery, bootStrap, or moment",
   "main": "angularjs-datetime-picker.js",
