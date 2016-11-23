@@ -242,13 +242,13 @@
           var minute = scope.minute || scope.minute === 0 ? scope.minute : today.getMinutes();
           scope.selectedDate = new Date(year, month, day, hour, minute, 0);
         }
-        scope.inputHour   = scope.selectedDate.getHours();
-        scope.inputMinute = scope.selectedDate.getMinutes();
 
         // Default to current year and month
         var elScope = ctrl.triggerEl.scope();
         var preSelectedDate = dateFilter(elScope.$eval(attrs.ngModel), dateFormat);
         scope.selectedDate = preSelectedDate ? new Date(preSelectedDate) : scope.selectedDate;
+        scope.inputHour   = preSelectedDate ? new Date(preSelectedDate).getHours() : scope.selectedDate.getHours();
+        scope.inputMinute = preSelectedDate ? new Date(preSelectedDate).getMinutes() : scope.selectedDate.getMinutes();
         scope.mv = getMonthView(scope.selectedDate.getFullYear(), scope.selectedDate.getMonth());
         scope.today = dateFilter(today, 'yyyy-M-d');
         if (scope.mv.year == scope.selectedDate.getFullYear() && scope.mv.month == scope.selectedDate.getMonth()) {
