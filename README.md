@@ -37,7 +37,11 @@ Attributes
   -  minute: optional, minute selected, 59
   -  date-only: optional, if set, timepicker will be hidden
   -  future-only: optional, if set, Date which is older than today's Date will be not be selectable (Past time for same date is not handled)
-  -  start-date & end-date: optional, if set, date which is in between the range will only be selectable. future-only tag has more precedence than date range feature, date range feature will not work if future-only tag is enabled
+  -  start-date optional, if set, date which is on or after start-date will be selectable
+  -  end-date optional, if set, date which is on or before end-date will be selectable
+  -  start-date & end-date: optional, if set, date which is in between the range will only be selectable
+  Note:
+  future-only tag has more precedence than start-date & end-date tags
 
 Examples
 --------
@@ -45,6 +49,12 @@ Examples
     <input ng-model="date0" datetime-picker date-only />
 
     <input ng-model="date1" datetime-picker date-only future-only />
+
+    <input ng-model="date6" datetime-picker start-date="11-20-2016" size="30" />
+
+    <input ng-model="date6" datetime-picker end-date="02-25-2017" size="30" />
+
+    <input ng-model="date6" datetime-picker start-date="11-20-2016" end-date="02-25-2017" size="30" />
 
     <input ng-model="date2" datetime-picker date-format="yyyy-MM-dd" date-only />
 

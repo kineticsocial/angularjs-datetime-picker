@@ -270,6 +270,14 @@
             startDate.setHours(0,0,0,0);
             endDate.setHours(0,0,0,0);
             return startDate <= someday && someday <= endDate;
+          } else if (!isNaN(Date.parse(attrs.startDate)) && isNaN(Date.parse(attrs.endDate))) {
+            var startDate = new Date(attrs.startDate);
+            startDate.setHours(0,0,0,0);
+            return startDate <= someday;
+          } else if (isNaN(Date.parse(attrs.startDate)) && !isNaN(Date.parse(attrs.endDate))) {
+            var endDate = new Date(attrs.endDate);
+            endDate.setHours(0,0,0,0);
+            return someday <= endDate;
           } else {
             return true;
           }
