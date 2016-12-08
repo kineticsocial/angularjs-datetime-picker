@@ -356,6 +356,8 @@
           if( attrs.hasOwnProperty('futureOnly') ){
             ctrl.$setValidity('future-only', date < now? false : true);
           }
+          var callback = element.scope().$eval(attrs.onChangeCallback);
+          callback && typeof callback === 'function' && callback();
         });
 
         element[0].addEventListener('click', function() {
@@ -372,7 +374,8 @@
             futureOnly: attrs.futureOnly,
             startDate: attrs.startDate,
             endDate: attrs.endDate,
-            closeOnSelect: attrs.closeOnSelect
+            closeOnSelect: attrs.closeOnSelect,
+            onChangeCallback: attrs.onChangeCallback
           });
         });
       }

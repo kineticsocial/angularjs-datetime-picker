@@ -8,6 +8,9 @@
     angular.module('myApp',['angularjs-datetime-picker']);
     angular.module('myApp').run(function($rootScope) {
       $rootScope.gmtDate = new Date('2015-01-01 00:00:00 -00:00');
+      $rootScope.callback = function () {
+        console.log("Calender date had changed");
+      }
     });
   </script>
 </head>
@@ -22,7 +25,7 @@
   <input ng-model="date0" datetime-picker date-only size="30" /> <br/> <br/>
 
   &lt;input ng-model="date1" datetime-picker date-only future-only /> <br/>
-  <input ng-model="date1" datetime-picker date-only future-only size="30" /> <br/> <br/>
+  <input ng-model="date1" on-change-callback="callback" datetime-picker date-only future-only size="30" /> <br/> <br/>
 
   &lt;input ng-model="date6" datetime-picker date-only start-date="11-20-2016" end-date="22-25-2017" /> <br/>
   <input ng-model="date6" datetime-picker start-date="11-20-2016" end-date="02-25-2017" size="30" /> <br/> <br/>
