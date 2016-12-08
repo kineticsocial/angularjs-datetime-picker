@@ -346,7 +346,9 @@
       link: function(scope, element, attrs, ctrl) {
         // Attach validation watcher
         scope.$watch(attrs.ngModel, function(value) {
-          if( !value || value == '' ){
+          var callback = element.scope().$eval(attrs.onChangeCallback);
+          if( !value || value == '' ) {
+            callback && typeof callback === 'function' && callback();
             return;
           }
           // The value has already been cleaned by the above code
@@ -356,7 +358,6 @@
           if( attrs.hasOwnProperty('futureOnly') ){
             ctrl.$setValidity('future-only', date < now? false : true);
           }
-          var callback = element.scope().$eval(attrs.onChangeCallback);
           callback && typeof callback === 'function' && callback();
         });
 
