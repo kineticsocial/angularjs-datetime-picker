@@ -211,6 +211,7 @@
         ctrl.triggerEl = angular.element(element[0].triggerEl);
         if (attrs.ngModel) { // need to parse date string
           var dateStr = ''+ctrl.triggerEl.scope().$eval(attrs.ngModel);
+          console.log(dateStr);
           if (dateStr) {
             if (!dateStr.match(/[0-9]{2}:/)) {  // if no time is given, add 00:00:00 at the end
               dateStr += " 00:00:00";
@@ -258,7 +259,7 @@
         }
         
         scope.isDateSelectable = function (day, month, year) {
-          var someday = new Date((month+1) + '-' + day + '-' + year);
+          var someday = new Date((month+1) + '/' + day + '/' + year);
           someday.setHours(0,0,0,0);
           if (attrs.futureOnly) {
             var today = new Date();
