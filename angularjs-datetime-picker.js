@@ -255,7 +255,7 @@
         if (scope.mv.year == scope.selectedDate.getFullYear() && scope.mv.month == scope.selectedDate.getMonth()) {
           scope.selectedDay = scope.selectedDate.getDate();
         } else {
-          scope.selectedDay = null;a
+          scope.selectedDay = null;
         }
         
         scope.isDateSelectable = function (day, month, year) {
