@@ -72,3 +72,20 @@
 .angularjs-datetime-picker input[type=range] {
   width: 150px;
 }
+
+.hourLabel {
+  float: left;
+}
+
+.minutesLabel {
+  float: left;
+}
+
+.hourInput {
+  margin: 0px;
+}
+
+.minutesInput {
+  margin: 0px;
+}
+
