@@ -74,19 +74,15 @@
 
       options.scope.$apply();
 
-      var datePickerElBcr = datetimePickerEl.getBoundingClientRect();
-
-      datetimePickerEl.style.position='absolute';
-      if(bcr.width > datePickerElBcr.width){
-        datetimePickerEl.style.left= (bcr.left + bcr.width - datePickerElBcr.width + window.scrollX) + 'px';
-      } else {
-        datetimePickerEl.style.left= (bcr.left + window.scrollX) + 'px';
+      datetimePickerEl.style.position = 'absolute';
+      datetimePickerEl.style.left = (bcr.left + window.scrollX) + 'px';
+      if (bcr.top > 50 && bcr.top + 300 < window.innerHeight) {
+        datetimePickerEl.style.top = (bcr.top - 50) + 'px';
+      } else if (bcr.top > 50 && bcr.top + 275 > window.innerHeight) {
+        datetimePickerEl.style.top = (window.innerHeight - 275) + 'px';
       }
-
-      if (bcr.top < 300 || window.innerHeight - bcr.bottom > 300) {
-        datetimePickerEl.style.top = (bcr.bottom + window.scrollY) + 'px';
-      } else {
-        datetimePickerEl.style.top = (bcr.top - datePickerElBcr.height + window.scrollY) + 'px';
+      else {
+        datetimePickerEl.style.top = bcr.top + 'px';
       }
 
       $document[0].body.addEventListener('click', this.closeDatetimePicker);
@@ -211,7 +207,6 @@
         ctrl.triggerEl = angular.element(element[0].triggerEl);
         if (attrs.ngModel) { // need to parse date string
           var dateStr = ''+ctrl.triggerEl.scope().$eval(attrs.ngModel);
-          console.log(dateStr);
           if (dateStr) {
             if (!dateStr.match(/[0-9]{2}:/)) {  // if no time is given, add 00:00:00 at the end
               dateStr += " 00:00:00";
@@ -257,7 +252,7 @@
         } else {
           scope.selectedDay = null;
         }
-        
+
         scope.isDateSelectable = function (day, month, year) {
           var someday = new Date((month+1) + '/' + day + '/' + year);
           someday.setHours(0,0,0,0);
