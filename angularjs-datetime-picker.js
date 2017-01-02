@@ -67,22 +67,26 @@
       datetimePickerEl.triggerEl = options.triggerEl;
 
       $document[0].body.appendChild(datetimePickerEl);
-
-      //show datetimePicker below triggerEl
-      var bcr = triggerEl.getBoundingClientRect();
-
+      /*angular.element(triggerEl).after(datetimePickerEl);*/
 
       options.scope.$apply();
 
-      datetimePickerEl.style.position = 'absolute';
-      datetimePickerEl.style.left = (bcr.left + window.scrollX) + 'px';
-      if (bcr.top > 50 && bcr.top + 300 < window.innerHeight) {
-        datetimePickerEl.style.top = (bcr.top - 50) + 'px';
-      } else if (bcr.top > 50 && bcr.top + 275 > window.innerHeight) {
-        datetimePickerEl.style.top = (window.innerHeight - 275) + 'px';
+      //show datetimePicker below triggerEl with respect to window size
+      // comment below code to add popup with input and un comment above code
+      var bcr = triggerEl.getBoundingClientRect();
+      var datePickerElBcr = datetimePickerEl.getBoundingClientRect();
+      datetimePickerEl.style.position='absolute';
+      datetimePickerEl.style.width = "210px";
+      if(bcr.width > datePickerElBcr.width){
+        datetimePickerEl.style.left= (bcr.left + bcr.width - datePickerElBcr.width + window.scrollX) + 'px';
+      } else {
+        datetimePickerEl.style.left= (bcr.left + window.scrollX) + 'px';
       }
-      else {
-        datetimePickerEl.style.top = bcr.top + 'px';
+
+      if (bcr.top < 300 || window.innerHeight - bcr.bottom > 300) {
+        datetimePickerEl.style.top = (bcr.bottom + window.scrollY) + 'px';
+      } else {
+        datetimePickerEl.style.top = (bcr.top - datePickerElBcr.height + window.scrollY) + 'px';
       }
 
       $document[0].body.addEventListener('click', this.closeDatetimePicker);
@@ -130,9 +134,9 @@
     '    <div class="adp-day" ng-show="mv.trailingDays.length < 7" ng-repeat="day in mv.trailingDays">{{::day}}</div>',
     '  </div>',
     '  <div class="adp-days" id="adp-time"> ',
-    '    <label class="timeLabel">Time:</label> <span class="timeValue">{{("0"+inputHour).slice(-2)}} : {{("0"+inputMinute).slice(-2)}}</span><br/>',
-    '    <label class="hourLabel">Hour:</label> <input class="hourInput" type="range" min="0" max="23" ng-model="inputHour" ng-change="updateNgModel(selectedDay)" />',
-    '    <label class="minutesLabel">Min:</label> <input class="minutesInput" type="range" min="0" max="59" ng-model="inputMinute"  ng-change="updateNgModel(selectedDay)"/> ',
+    '    <span class="timeLabel">Time:</span> <span class="timeValue">{{("0"+inputHour).slice(-2)}} : {{("0"+inputMinute).slice(-2)}}</span><br/>',
+    '    <span class="hourLabel">Hour:</span> <input class="hourInput" type="range" min="0" max="23" ng-model="inputHour" ng-change="updateNgModel(selectedDay)" />',
+    '    <span class="minutesLabel">Min:</span> <input class="minutesInput" type="range" min="0" max="59" ng-model="inputMinute"  ng-change="updateNgModel(selectedDay)"/> ',
     '  </div> ',
     '</div>'].join("\n");
 
