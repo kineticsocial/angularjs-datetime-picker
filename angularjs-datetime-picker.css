@@ -4,6 +4,7 @@
   border: 1px solid #ddd;
   display: inline-block;
   background: #fff;
+  z-index: 1;
 }
 .angularjs-datetime-picker > .adp-month {
   text-align: center;
@@ -28,9 +29,15 @@
   color: #333;
 }
 .angularjs-datetime-picker > .adp-month > button.adp-prev {
-  left: 10px;
+  top: 12px;
+  left: 50px;
 }
 .angularjs-datetime-picker > .adp-month > button.adp-next {
+  top: 12px;
+  right: 50px;
+}
+.angularjs-datetime-picker > .adp-month > button.close {
+  top: 12px;
   right: 10px;
 }
 .angularjs-datetime-picker > .adp-days {
