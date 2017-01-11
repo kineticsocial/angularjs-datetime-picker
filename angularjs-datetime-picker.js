@@ -73,9 +73,9 @@
       datetimePickerEl.style.left= (triggerEl.offsetLeft + window.scrollX) + 'px';
 
       if (triggerEl.offsetTop < 300 || window.innerHeight - triggerEl.offsetTop - triggerEl.clientHeight > 300) {
-        datetimePickerEl.style.top = (triggerEl.offsetTop + triggerEl.clientHeight + 2 * triggerEl.clientTop + window.scrollY) + 'px';
+        datetimePickerEl.style.top = (triggerEl.offsetTop + triggerEl.clientHeight + 2 * triggerEl.clientTop) + 'px';
       } else {
-        datetimePickerEl.style.top = (triggerEl.offsetTop - datePickerElBcr.height + 2 * triggerEl.clientTop + window.scrollY) + 'px';
+        datetimePickerEl.style.top = (triggerEl.offsetTop - datePickerElBcr.height + 2 * triggerEl.clientTop) + 'px';
       }
 
       $document[0].body.addEventListener('click', this.closeDatetimePicker);
