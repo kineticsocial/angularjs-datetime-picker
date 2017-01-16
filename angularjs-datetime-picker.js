@@ -48,6 +48,8 @@
       options.day      && div.attr('day', parseInt(options.day));
       options.hour     && div.attr('hour', parseInt(options.hour));
       options.minute   && div.attr('minute', parseInt(options.minute));
+      options.allowClose && div.attr('allow-close', options.allowClose);
+      options.displaySelectedDate && div.attr('display-selected-date', options.displaySelectedDate);
       if (options.dateOnly === '' || options.dateOnly === true) {
         div.attr('date-only', 'true');
       }
@@ -106,7 +108,15 @@
   angular.module('angularjs-datetime-picker').controller('DatetimePickerCtrl', DatetimePickerCtrl);
 
   var tmpl = [
-    '<div class="angularjs-datetime-picker">' ,
+    '<div class="angularjs-datetime-picker">' ,    
+    '  <div class="adp-month adp-top" id="adp-top" style="display: none;">',
+    '    <span class="adp-prev" ></span>',
+    '    <div>',
+    '       <label class="timeLabel">Date:</label> {{ selectedDate | date: "mediumDate" }}<br />',
+    '       <a type="button" class="adp-link" ng-click="changeCurrentDate()">Change to today</a>',
+    '    </div>',
+    '    <button type="button" class="adp-next adp-close" ng-click="closeDatetimePicker()">x</button>',
+    '  </div>',
     '  <div class="adp-month">',
     '    <button type="button" class="adp-prev" ng-click="addMonth(-1)">&laquo;</button>',
     '    <span title="{{months[mv.month].fullName}}">{{months[mv.month].shortName}}</span> {{mv.year}}',
@@ -127,9 +137,9 @@
     '    <div class="adp-day" ng-show="mv.trailingDays.length < 7" ng-repeat="day in mv.trailingDays">{{::day}}</div>',
     '  </div>',
     '  <div class="adp-days" id="adp-time"> ',
-    '    <label class="timeLabel">Time:</label> <span class="timeValue">{{("0"+inputHour).slice(-2)}} : {{("0"+inputMinute).slice(-2)}}</span><br/>',
-    '    <label class="hourLabel">Hour:</label> <input class="hourInput" type="range" min="0" max="23" ng-model="inputHour" ng-change="updateNgModel()" />',
-    '    <label class="minutesLabel">Min:</label> <input class="minutesInput" type="range" min="0" max="59" ng-model="inputMinute"  ng-change="updateNgModel()"/> ',
+    '    <div class="adp-time"><label class="timeLabel">Time:</label> <span class="timeValue">{{("0"+inputHour).slice(-2)}} : {{("0"+inputMinute).slice(-2)}}</span></div><br/>',
+    '    <label class="hourLabel">Hour:</label> <input class="hourInput" type="range" min="0" max="23" ng-model="inputHour" ng-change="updateNgModel(selectedDay)" />',
+    '    <label class="minutesLabel">Min:</label> <input class="minutesInput" type="range" min="0" max="59" ng-model="inputMinute"  ng-change="updateNgModel(selectedDay)"/> ',
     '  </div> ',
     '</div>'].join("\n");
 
@@ -199,21 +209,28 @@
       if (scope.dateOnly === true){
         element[0].querySelector('#adp-time').style.display = 'none';
       }
+      if (scope.allowClose === true && element[0].querySelector('#adp-top')){
+        element[0].querySelector('#adp-top').style.display = 'block';
+      }
+
 
       scope.$applyAsync( function() {
         ctrl.triggerEl = angular.element(element[0].triggerEl);
         if (attrs.ngModel) { // need to parse date string
           var dateStr = ''+ctrl.triggerEl.scope().$eval(attrs.ngModel);
           if (dateStr) {
-            if (!dateStr.match(/[0-9]{2}:/)) {  // if no time is given, add 00:00:00 at the end
-              dateStr += " 00:00:00";
+            if(!scope.displaySelectedDate) {
+              if (!dateStr.match(/[0-9]{2}:/)) {  // if no time is given, add 00:00:00 at the end
+                dateStr += " 00:00:00";
+              }
+              dateStr = dateStr.replace(/([0-9]{2}-[0-9]{2})-([0-9]{4})/,'$2-$1');      //mm-dd-yyyy to yyyy-mm-dd
+              dateStr = dateStr.replace(/([\/-][0-9]{2,4})\ ([0-9]{2}\:[0-9]{2}\:)/,'$1T$2'); //reformat for FF
+              dateStr = dateStr.replace(/EDT|EST|CDT|CST|MDT|PDT|PST|UT|GMT/g,''); //remove timezone
+              dateStr = dateStr.replace(/\s*\(\)\s*/,'');                          //remove timezone
+              dateStr = dateStr.replace(/[\-\+][0-9]{2}:?[0-9]{2}$/,'');           //remove timezone
+              dateStr += getTimezoneOffset(dateStr);
             }
-            dateStr = dateStr.replace(/([0-9]{2}-[0-9]{2})-([0-9]{4})/,'$2-$1');      //mm-dd-yyyy to yyyy-mm-dd
-            dateStr = dateStr.replace(/([\/-][0-9]{2,4})\ ([0-9]{2}\:[0-9]{2}\:)/,'$1T$2'); //reformat for FF
-            dateStr = dateStr.replace(/EDT|EST|CDT|CST|MDT|PDT|PST|UT|GMT/g,''); //remove timezone
-            dateStr = dateStr.replace(/\s*\(\)\s*/,'');                          //remove timezone
-            dateStr = dateStr.replace(/[\-\+][0-9]{2}:?[0-9]{2}$/,'');           //remove timezone
-            dateStr += getTimezoneOffset(dateStr);
+            
             var d = new Date(dateStr);
             scope.selectedDate = new Date(
               d.getFullYear(),
@@ -225,20 +242,23 @@
             );
           }
         }
-
         if (!scope.selectedDate || isNaN(scope.selectedDate.getTime())) { // no predefined date
           var today = new Date();
           var year = scope.year || today.getFullYear();
           var month = scope.month ? (scope.month-1) : today.getMonth();
           var day = scope.day || today.getDate();
-          var hour = scope.hour || today.getHours();
-          var minute = scope.minute || today.getMinutes();
+          var hour = scope.hour || scope.hour === 0 ? scope.hour : today.getHours();
+          var minute = scope.minute || scope.minute === 0 ? scope.minute : today.getMinutes();
           scope.selectedDate = new Date(year, month, day, hour, minute, 0);
         }
         scope.inputHour   = scope.selectedDate.getHours();
         scope.inputMinute = scope.selectedDate.getMinutes();
 
         // Default to current year and month
+        var elScope = ctrl.triggerEl.scope();
+        var preSelectedDate = dateFilter(elScope.$eval(attrs.ngModel), dateFormat);
+        scope.selectedDate = preSelectedDate ? new Date(preSelectedDate) : scope.selectedDate;
+
         scope.mv = getMonthView(scope.selectedDate.getFullYear(), scope.selectedDate.getMonth());
         scope.today = dateFilter(new Date(), 'yyyy-M-d');
         if (scope.mv.year == scope.selectedDate.getFullYear() && scope.mv.month == scope.selectedDate.getMonth()) {
@@ -248,9 +268,23 @@
         }
       });
 
+      scope.changeCurrentDate = function () {
+        scope.selectedDate = new Date();
+        scope.mv = getMonthView(scope.selectedDate.getFullYear(), scope.selectedDate.getMonth());
+        scope.today = dateFilter(new Date(), 'yyyy-M-d');
+        if (scope.mv.year == scope.selectedDate.getFullYear() && scope.mv.month == scope.selectedDate.getMonth()) {
+          scope.selectedDay = scope.selectedDate.getDate();
+        } else {
+          scope.selectedDay = null;
+        }
+      };
       scope.addMonth = function (amount) {
         scope.mv = getMonthView(scope.mv.year, scope.mv.month + amount);
       };
+
+      scope.closeDatetimePicker = function() {
+        ctrl.closeDatetimePicker();
+      }
 
       scope.setDate = function (evt) {
         var target = angular.element(evt.target)[0];
@@ -295,7 +329,9 @@
         hour: '=',
         minute: '=',
         dateOnly: '=',
-        closeOnSelect: '='
+        closeOnSelect: '=',
+        allowClose: '=',
+        displaySelectedDate: '='
       },
       link: linkFunc
     };
@@ -334,7 +370,9 @@
             minute: attrs.minute,
             dateOnly: attrs.dateOnly,
             futureOnly: attrs.futureOnly,
-            closeOnSelect: attrs.closeOnSelect
+            closeOnSelect: attrs.closeOnSelect,
+            displaySelectedDate: attrs.displaySelectedDate,
+            allowClose: attrs.allowClose
           });
         });
       }

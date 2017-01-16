@@ -33,6 +33,24 @@
 .angularjs-datetime-picker > .adp-month > button.adp-next {
   right: 10px;
 }
+.angularjs-datetime-picker > .adp-days .adp-time {
+  font-weight: bold;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+.angularjs-datetime-picker > .adp-month > button.adp-close {  
+  top: 10px;
+}
+
+.angularjs-datetime-picker > .adp-month.adp-top {  
+  text-transform: unset;
+}
+.angularjs-datetime-picker > .adp-month.adp-top  a{  
+  font-weight: normal;
+  text-decoration: underline;
+  cursor: pointer;
+}
 .angularjs-datetime-picker > .adp-days {
   width: 210px; /* 30 x 7 */
   margin: 10px;
@@ -70,5 +88,5 @@
 }
 
 .angularjs-datetime-picker input[type=range] {
-  width: 150px;
+   width: 100%;
 }
