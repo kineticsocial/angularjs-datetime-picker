@@ -79,7 +79,7 @@
         datetimePickerEl.style.left= (bcr.left + window.scrollX) + 'px';
       }
 
-      if (bcr.top < 300 || window.innerHeight - bcr.bottom > 300) {
+      if (bcr.top < 500 || window.innerHeight - bcr.bottom > 500) {
         datetimePickerEl.style.top = (bcr.bottom + window.scrollY) + 'px';
       } else {
         datetimePickerEl.style.top = (bcr.top - datePickerElBcr.height + window.scrollY) + 'px';
@@ -102,7 +102,7 @@
       } else {
         removeEl(popupEl);
       }
-    }
+    };
   };
   DatetimePickerCtrl.$inject = ['$compile', '$document'];
   angular.module('angularjs-datetime-picker').controller('DatetimePickerCtrl', DatetimePickerCtrl);
@@ -215,6 +215,7 @@
 
 
       scope.$applyAsync( function() {
+        
         ctrl.triggerEl = angular.element(element[0].triggerEl);
         if (attrs.ngModel) { // need to parse date string
           var dateStr = ''+ctrl.triggerEl.scope().$eval(attrs.ngModel);
@@ -255,9 +256,9 @@
         scope.inputMinute = scope.selectedDate.getMinutes();
 
         // Default to current year and month
-        var elScope = ctrl.triggerEl.scope();
-        var preSelectedDate = dateFilter(elScope.$eval(attrs.ngModel), dateFormat);
-        scope.selectedDate = preSelectedDate ? new Date(preSelectedDate) : scope.selectedDate;
+        // var elScope = ctrl.triggerEl.scope();
+        // var preSelectedDate = dateFilter(elScope.$eval(attrs.ngModel), dateFormat);
+        // scope.selectedDate = preSelectedDate ? new Date(preSelectedDate) : scope.selectedDate;
 
         scope.mv = getMonthView(scope.selectedDate.getFullYear(), scope.selectedDate.getMonth());
         scope.today = dateFilter(new Date(), 'yyyy-M-d');
@@ -284,7 +285,7 @@
 
       scope.closeDatetimePicker = function() {
         ctrl.closeDatetimePicker();
-      }
+      };
 
       scope.setDate = function (evt) {
         var target = angular.element(evt.target)[0];
@@ -303,12 +304,16 @@
         );
         scope.selectedDay = scope.selectedDate.getDate();
         if (attrs.ngModel) {
-          //console.log('attrs.ngModel',attrs.ngModel);
+          // convert back to UTC format
+          scope.selectedDateUTC = new Date(
+            scope.mv.year, scope.mv.month, day, scope.inputHour, scope.inputMinute, 0
+          );
+          scope.selectedDateUTC.setMinutes(scope.selectedDateUTC.getMinutes()+scope.selectedDateUTC.getTimezoneOffset());
           var elScope = ctrl.triggerEl.scope(), dateValue;
           if (elScope.$eval(attrs.ngModel) && elScope.$eval(attrs.ngModel).constructor.name === 'Date') {
-            dateValue = new Date(dateFilter(scope.selectedDate, dateFormat));
+            dateValue = new Date(dateFilter(scope.selectedDateUTC, dateFormat));          
           } else {
-            dateValue = dateFilter(scope.selectedDate, dateFormat);
+            dateValue = dateFilter(scope.selectedDateUTC, dateFormat);
           }
           elScope.$eval(attrs.ngModel + '= date', {date: dateValue});
         }

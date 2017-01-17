@@ -4,6 +4,7 @@
   border: 1px solid #ddd;
   display: inline-block;
   background: #fff;
+  z-index: 99999;
 }
 .angularjs-datetime-picker > .adp-month {
   text-align: center;
