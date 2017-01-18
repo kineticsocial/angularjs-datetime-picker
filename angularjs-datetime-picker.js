@@ -113,7 +113,8 @@
     '    <span class="adp-prev" ></span>',
     '    <div>',
     '       <label class="timeLabel">Date:</label> {{ selectedDate | date: "mediumDate" }}<br />',
-    '       <a type="button" class="adp-link" ng-click="changeCurrentDate()">Change to today</a>',
+    '       <a type="button" class="adp-link" ng-click="changeCurrentDate()">Change to today</a><br />',
+    '       <a type="button" class="adp-link" ng-click="clearSelectedDate()">Clear</a><br />',
     '    </div>',
     '    <button type="button" class="adp-next adp-close" ng-click="closeDatetimePicker()">x</button>',
     '  </div>',
@@ -137,7 +138,7 @@
     '    <div class="adp-day" ng-show="mv.trailingDays.length < 7" ng-repeat="day in mv.trailingDays">{{::day}}</div>',
     '  </div>',
     '  <div class="adp-days" id="adp-time"> ',
-    '    <div class="adp-time"><label class="timeLabel">Time:</label> <span class="timeValue">{{("0"+inputHour).slice(-2)}} : {{("0"+inputMinute).slice(-2)}}</span></div><br/>',
+    '    <div class="adp-time"><label class="timeLabel">Time:</label> <span class="timeValue">{{ displayTime() }}</span></div><br/>',
     '    <label class="hourLabel">Hour:</label> <input class="hourInput" type="range" min="0" max="23" ng-model="inputHour" ng-change="updateNgModel(selectedDay)" />',
     '    <label class="minutesLabel">Min:</label> <input class="minutesInput" type="range" min="0" max="59" ng-model="inputMinute"  ng-change="updateNgModel(selectedDay)"/> ',
     '  </div> ',
@@ -283,6 +284,12 @@
       	if(scope.inputMinute == null || scope.inputHour == null)
       		return ""; 
       	return ("0"+scope.inputHour).slice(-2) + ":" + ("0"+scope.inputMinute).slice(-2);
+      };
+      scope.clearSelectedDate = function () {
+        scope.selectedDate = null;
+        scope.selectedDay = null;
+        scope.inputHour = null;
+        scope.inputMinute = null;
       };
       scope.addMonth = function (amount) {
         scope.mv = getMonthView(scope.mv.year, scope.mv.month + amount);
