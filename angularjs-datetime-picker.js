@@ -279,6 +279,11 @@
           scope.selectedDay = null;
         }
       };
+      scope.displayTime = function() {
+      	if(scope.inputMinute == null || scope.inputHour == null)
+      		return ""; 
+      	return ("0"+scope.inputHour).slice(-2) + ":" + ("0"+scope.inputMinute).slice(-2);
+      };
       scope.addMonth = function (amount) {
         scope.mv = getMonthView(scope.mv.year, scope.mv.month + amount);
       };
