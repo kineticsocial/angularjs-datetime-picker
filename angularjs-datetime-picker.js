@@ -294,6 +294,10 @@
         scope.selectedDay = null;
         scope.inputHour = null;
         scope.inputMinute = null;
+        if (attrs.ngModel) {
+          var elScope = ctrl.triggerEl.scope();
+          elScope.$eval(attrs.ngModel + '= date', {date: null});
+        }
       };
       scope.addMonth = function (amount) {
         scope.mv = getMonthView(scope.mv.year, scope.mv.month + amount);
