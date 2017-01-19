@@ -142,6 +142,9 @@
     '    <label class="hourLabel">Hour:</label> <input class="hourInput" type="range" min="0" max="23" ng-model="inputHour" ng-change="updateNgModel(selectedDay)" />',
     '    <label class="minutesLabel">Min:</label> <input class="minutesInput" type="range" min="0" max="59" ng-model="inputMinute"  ng-change="updateNgModel(selectedDay)"/> ',
     '  </div> ',
+    '  <div class="adp-month adp-top" id="adp-bottom" style="display: none;">',
+    '       <a type="button" class="adp-link" ng-click="closeDatetimePicker()">OK</a>',
+    '  </div>',
     '</div>'].join("\n");
 
   var datetimePickerPopup = function($locale, dateFilter){
