@@ -213,8 +213,9 @@
       if (scope.dateOnly === true){
         element[0].querySelector('#adp-time').style.display = 'none';
       }
-      if (scope.allowClose === true && element[0].querySelector('#adp-top')){
+      if (scope.allowClose === true){
         element[0].querySelector('#adp-top').style.display = 'block';
+        element[0].querySelector('#adp-bottom').style.display = 'block';
       }
 
 
