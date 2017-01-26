@@ -34,7 +34,7 @@
     var datetimePickerEl;
     var _this = this;
     var removeEl = function(el) {
-      el && el.remove();
+      el && el.parentElement.removeChild(el);
       $document[0].body.removeEventListener('click', _this.closeDatetimePicker);
     };
 
@@ -51,6 +51,12 @@
       if (options.dateOnly === '' || options.dateOnly === true) {
         div.attr('date-only', 'true');
       }
+      if (options.futureOnly === '' || options.futureOnly === true) {
+        div.attr('future-only', 'true');
+      } else {
+        options.startDate  && div.attr('start-date', options.startDate);
+        options.endDate  && div.attr('end-date', options.endDate);
+      }
       if (options.closeOnSelect === 'false') {
         div.attr('close-on-select', 'false');
       }
@@ -61,26 +67,25 @@
       datetimePickerEl.triggerEl = options.triggerEl;
 
       $document[0].body.appendChild(datetimePickerEl);
-
-      //show datetimePicker below triggerEl
-      var bcr = triggerEl.getBoundingClientRect();
-
+      /*angular.element(triggerEl).after(datetimePickerEl);*/
 
       options.scope.$apply();
 
+      //show datetimePicker below triggerEl with respect to window size
+      // comment below code to add popup with input and un comment above code
+      var bcr = triggerEl.getBoundingClientRect();
       var datePickerElBcr = datetimePickerEl.getBoundingClientRect();
-
       datetimePickerEl.style.position='absolute';
       if(bcr.width > datePickerElBcr.width){
-        datetimePickerEl.style.left= (bcr.left + bcr.width - datePickerElBcr.width + window.scrollX) + 'px';
+        datetimePickerEl.style.left= (bcr.left + bcr.width - datePickerElBcr.width + window.pageXOffset) + 'px';
       } else {
-        datetimePickerEl.style.left= (bcr.left + window.scrollX) + 'px';
+        datetimePickerEl.style.left= (bcr.left + window.pageXOffset) + 'px';
       }
 
       if (bcr.top < 300 || window.innerHeight - bcr.bottom > 300) {
-        datetimePickerEl.style.top = (bcr.bottom + window.scrollY) + 'px';
+        datetimePickerEl.style.top = (bcr.bottom + window.pageYOffset) + 'px';
       } else {
-        datetimePickerEl.style.top = (bcr.top - datePickerElBcr.height + window.scrollY) + 'px';
+        datetimePickerEl.style.top = (bcr.top - datePickerElBcr.height + window.pageYOffset) + 'px';
       }
 
       $document[0].body.addEventListener('click', this.closeDatetimePicker);
@@ -115,9 +120,10 @@
     '  <div class="adp-days" ng-click="setDate($event)">',
     '    <div class="adp-day-of-week" ng-repeat="dayOfWeek in ::daysOfWeek" title="{{dayOfWeek.fullName}}">{{::dayOfWeek.firstLetter}}</div>',
     '    <div class="adp-day" ng-show="mv.leadingDays.length < 7" ng-repeat="day in mv.leadingDays">{{::day}}</div>',
-    '    <div class="adp-day selectable" ng-repeat="day in mv.days" ',
+    '    <div class="adp-day" ng-repeat="day in mv.days" ',
     '      today="{{today}}" d2="{{mv.year + \'-\' + (mv.month + 1) + \'-\' + day}}"',
     '      ng-class="{',
+    '        selectable: isDateSelectable(day, mv.month, mv.year),',
     '        selected: (day == selectedDay),',
     '        today: (today == (mv.year + \'-\' + (mv.month + 1) + \'-\' + day)),',
     '        weekend: (mv.leadingDays.length + day)%7 == 1 || (mv.leadingDays.length + day)%7 == 0',
@@ -127,9 +133,9 @@
     '    <div class="adp-day" ng-show="mv.trailingDays.length < 7" ng-repeat="day in mv.trailingDays">{{::day}}</div>',
     '  </div>',
     '  <div class="adp-days" id="adp-time"> ',
-    '    <label class="timeLabel">Time:</label> <span class="timeValue">{{("0"+inputHour).slice(-2)}} : {{("0"+inputMinute).slice(-2)}}</span><br/>',
-    '    <label class="hourLabel">Hour:</label> <input class="hourInput" type="range" min="0" max="23" ng-model="inputHour" ng-change="updateNgModel()" />',
-    '    <label class="minutesLabel">Min:</label> <input class="minutesInput" type="range" min="0" max="59" ng-model="inputMinute"  ng-change="updateNgModel()"/> ',
+    '    <span class="timeLabel">Time:</span> <span class="timeValue">{{("0"+inputHour).slice(-2)}} : {{("0"+inputMinute).slice(-2)}}</span><br/>',
+    '    <span class="hourLabel">Hour:</span> <input class="hourInput" type="range" min="0" max="23" ng-model="inputHour" ng-change="updateNgModel(selectedDay)" />',
+    '    <span class="minutesLabel">Min:</span> <input class="minutesInput" type="range" min="0" max="59" ng-model="inputMinute"  ng-change="updateNgModel(selectedDay)"/> ',
     '  </div> ',
     '</div>'].join("\n");
 
@@ -226,26 +232,55 @@
           }
         }
 
+        var today = new Date();
         if (!scope.selectedDate || isNaN(scope.selectedDate.getTime())) { // no predefined date
-          var today = new Date();
           var year = scope.year || today.getFullYear();
           var month = scope.month ? (scope.month-1) : today.getMonth();
           var day = scope.day || today.getDate();
-          var hour = scope.hour || today.getHours();
-          var minute = scope.minute || today.getMinutes();
+          var hour = scope.hour || scope.hour === 0 ? scope.hour : today.getHours();
+          var minute = scope.minute || scope.minute === 0 ? scope.minute : today.getMinutes();
           scope.selectedDate = new Date(year, month, day, hour, minute, 0);
         }
-        scope.inputHour   = scope.selectedDate.getHours();
-        scope.inputMinute = scope.selectedDate.getMinutes();
 
         // Default to current year and month
+        var elScope = ctrl.triggerEl.scope();
+        var preSelectedDate = dateFilter(elScope.$eval(attrs.ngModel), dateFormat);
+        scope.selectedDate = preSelectedDate ? new Date(preSelectedDate) : scope.selectedDate;
+        scope.inputHour   = preSelectedDate ? new Date(preSelectedDate).getHours() : scope.selectedDate.getHours();
+        scope.inputMinute = preSelectedDate ? new Date(preSelectedDate).getMinutes() : scope.selectedDate.getMinutes();
         scope.mv = getMonthView(scope.selectedDate.getFullYear(), scope.selectedDate.getMonth());
-        scope.today = dateFilter(new Date(), 'yyyy-M-d');
+        scope.today = dateFilter(today, 'yyyy-M-d');
         if (scope.mv.year == scope.selectedDate.getFullYear() && scope.mv.month == scope.selectedDate.getMonth()) {
           scope.selectedDay = scope.selectedDate.getDate();
         } else {
           scope.selectedDay = null;
         }
+
+        scope.isDateSelectable = function (day, month, year) {
+          var someday = new Date((month+1) + '/' + day + '/' + year);
+          someday.setHours(0,0,0,0);
+          if (attrs.futureOnly) {
+            var today = new Date();
+            today.setHours(0,0,0,0);
+            return someday >= today;
+          } else if (!isNaN(Date.parse(attrs.startDate)) && !isNaN(Date.parse(attrs.endDate))) {
+            var startDate = new Date(attrs.startDate);
+            var endDate = new Date(attrs.endDate);
+            startDate.setHours(0,0,0,0);
+            endDate.setHours(0,0,0,0);
+            return startDate <= someday && someday <= endDate;
+          } else if (!isNaN(Date.parse(attrs.startDate)) && isNaN(Date.parse(attrs.endDate))) {
+            var startDate = new Date(attrs.startDate);
+            startDate.setHours(0,0,0,0);
+            return startDate <= someday;
+          } else if (isNaN(Date.parse(attrs.startDate)) && !isNaN(Date.parse(attrs.endDate))) {
+            var endDate = new Date(attrs.endDate);
+            endDate.setHours(0,0,0,0);
+            return someday <= endDate;
+          } else {
+            return true;
+          }
+        };
       });
 
       scope.addMonth = function (amount) {
@@ -310,7 +345,9 @@
       link: function(scope, element, attrs, ctrl) {
         // Attach validation watcher
         scope.$watch(attrs.ngModel, function(value) {
-          if( !value || value == '' ){
+          var callback = element.scope().$eval(attrs.onChangeCallback);
+          if( !value || value == '' ) {
+            callback && typeof callback === 'function' && callback();
             return;
           }
           // The value has already been cleaned by the above code
@@ -320,6 +357,7 @@
           if( attrs.hasOwnProperty('futureOnly') ){
             ctrl.$setValidity('future-only', date < now? false : true);
           }
+          callback && typeof callback === 'function' && callback();
         });
 
         element[0].addEventListener('click', function() {
@@ -334,7 +372,10 @@
             minute: attrs.minute,
             dateOnly: attrs.dateOnly,
             futureOnly: attrs.futureOnly,
-            closeOnSelect: attrs.closeOnSelect
+            startDate: attrs.startDate,
+            endDate: attrs.endDate,
+            closeOnSelect: attrs.closeOnSelect,
+            onChangeCallback: attrs.onChangeCallback
           });
         });
       }

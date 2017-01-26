@@ -34,15 +34,14 @@
   right: 10px;
 }
 .angularjs-datetime-picker > .adp-days {
-  width: 210px; /* 30 x 7 */
-  margin: 10px;
+  padding: 10px;
   text-align: center;
 }
 .angularjs-datetime-picker > .adp-days > .adp-day-of-week, .angularjs-datetime-picker > .adp-days > .adp-day {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   border: 1px solid transparent;
-  width: 30px;
+  width: 14%;
   line-height: 28px;
   float: left;
 }
@@ -70,5 +69,5 @@
 }
 
 .angularjs-datetime-picker input[type=range] {
-  width: 150px;
+  width: 100%;
 }
