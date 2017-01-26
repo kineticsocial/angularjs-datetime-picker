@@ -1,7 +1,7 @@
 {
   "name": "angularjs-datetime-picker-v2",
   "main": "angularjs-datetime-picker.js",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "homepage": "https://github.com/mani-s17/angularjs-datetime-picker",
   "authors": [
     "Subramaniam Srinivasan <subramaniam.s17@gmail.com>"
