@@ -34,7 +34,7 @@
     var datetimePickerEl;
     var _this = this;
     var removeEl = function(el) {
-      el && el.remove();
+      el && el.parentElement.removeChild(el);
       $document[0].body.removeEventListener('click', _this.closeDatetimePicker);
     };
 
@@ -76,17 +76,16 @@
       var bcr = triggerEl.getBoundingClientRect();
       var datePickerElBcr = datetimePickerEl.getBoundingClientRect();
       datetimePickerEl.style.position='absolute';
-      datetimePickerEl.style.width = "210px";
       if(bcr.width > datePickerElBcr.width){
-        datetimePickerEl.style.left= (bcr.left + bcr.width - datePickerElBcr.width + window.scrollX) + 'px';
+        datetimePickerEl.style.left= (bcr.left + bcr.width - datePickerElBcr.width + window.pageXOffset) + 'px';
       } else {
-        datetimePickerEl.style.left= (bcr.left + window.scrollX) + 'px';
+        datetimePickerEl.style.left= (bcr.left + window.pageXOffset) + 'px';
       }
 
       if (bcr.top < 300 || window.innerHeight - bcr.bottom > 300) {
-        datetimePickerEl.style.top = (bcr.bottom + window.scrollY) + 'px';
+        datetimePickerEl.style.top = (bcr.bottom + window.pageYOffset) + 'px';
       } else {
-        datetimePickerEl.style.top = (bcr.top - datePickerElBcr.height + window.scrollY) + 'px';
+        datetimePickerEl.style.top = (bcr.top - datePickerElBcr.height + window.pageYOffset) + 'px';
       }
 
       $document[0].body.addEventListener('click', this.closeDatetimePicker);
