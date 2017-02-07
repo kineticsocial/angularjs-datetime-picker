@@ -277,12 +277,18 @@
       scope.changeCurrentDate = function () {
         scope.selectedDate = new Date();
         scope.mv = getMonthView(scope.selectedDate.getFullYear(), scope.selectedDate.getMonth());
-        scope.today = dateFilter(new Date(), 'yyyy-M-d');
-        if (scope.mv.year == scope.selectedDate.getFullYear() && scope.mv.month == scope.selectedDate.getMonth()) {
+        scope.today = dateFilter(scope.selectedDate, 'yyyy-M-d');
+        // set field date to today's date and time
           scope.selectedDay = scope.selectedDate.getDate();
-        } else {
-          scope.selectedDay = null;
+        if (attrs.ngModel) {
+          var elScope = ctrl.triggerEl.scope();
+          elScope.$eval(attrs.ngModel + '= date', {date: scope.selectedDate});
         }
+        // if (scope.mv.year == scope.selectedDate.getFullYear() && scope.mv.month == scope.selectedDate.getMonth()) {
+          // scope.selectedDay = scope.selectedDate.getDate();
+        // } else {
+          // scope.selectedDay = null;
+        // }
       };
       scope.displayTime = function() {
       	if(scope.inputMinute == null || scope.inputHour == null)
