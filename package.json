@@ -1,6 +1,6 @@
 {
   "name": "extended-angularjs-datetime-picker",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "description": "Extended version of KineticSocial's DateTime Picker library",
   "main": "angularjs-datetime-picker.js",
   "scripts": {
