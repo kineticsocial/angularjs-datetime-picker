@@ -54,6 +54,9 @@
       if (options.closeOnSelect === 'false') {
         div.attr('close-on-select', 'false');
       }
+      if (options.fieldId){
+        div.attr('field-id', options.fieldId);
+      }
 
       var triggerEl = options.triggerEl;
       options.scope = options.scope || angular.element(triggerEl).scope();
@@ -64,7 +67,6 @@
 
       //show datetimePicker below triggerEl
       var bcr = triggerEl.getBoundingClientRect();
-
 
       options.scope.$apply();
 
@@ -109,7 +111,8 @@
     '<div class="angularjs-datetime-picker">' ,
     '  <div class="adp-month">',
     '    <button type="button" class="adp-prev" ng-click="addMonth(-1)">&laquo;</button>',
-    '    <span title="{{months[mv.month].fullName}}">{{months[mv.month].shortName}}</span> {{mv.year}}',
+    '    <span class="adp-month-select" title="{{months[mv.month].fullName}}">{{months[mv.month].shortName}}</span>',
+    '    <input class="adp-year-input" type="number" max-length="4" min="1900" max="2999" ng-model="mv.year" onkeydown="return false" ng-change="updateView()"/>',
     '    <button type="button" class="adp-next" ng-click="addMonth(1)">&raquo;</button>',
     '  </div>',
     '  <div class="adp-days" ng-click="setDate($event)">',
@@ -252,6 +255,10 @@
         scope.mv = getMonthView(scope.mv.year, scope.mv.month + amount);
       };
 
+      scope.updateView = function() {
+        scope.mv = getMonthView(scope.mv.year, scope.mv.month);
+      }
+
       scope.setDate = function (evt) {
         var target = angular.element(evt.target)[0];
         if (target.className.indexOf('selectable') !== -1) {
@@ -269,14 +276,24 @@
         );
         scope.selectedDay = scope.selectedDate.getDate();
         if (attrs.ngModel) {
-          //console.log('attrs.ngModel',attrs.ngModel);
           var elScope = ctrl.triggerEl.scope(), dateValue;
+
           if (elScope.$eval(attrs.ngModel) && elScope.$eval(attrs.ngModel).constructor.name === 'Date') {
             dateValue = new Date(dateFilter(scope.selectedDate, dateFormat));
           } else {
             dateValue = dateFilter(scope.selectedDate, dateFormat);
           }
           elScope.$eval(attrs.ngModel + '= date', {date: dateValue});
+
+          // Emit event as ng-change does not trigger programmatically
+          if (scope.fieldId && scope.fieldId.length > 0)
+          {
+            scope.$emit('datetime-picker-changed',
+            {
+                id: scope.fieldId,
+                date: dateValue
+            });
+          }
         }
       };
 
@@ -295,7 +312,8 @@
         hour: '=',
         minute: '=',
         dateOnly: '=',
-        closeOnSelect: '='
+        closeOnSelect: '=',
+        fieldId: '@?'
       },
       link: linkFunc
     };
@@ -334,7 +352,8 @@
             minute: attrs.minute,
             dateOnly: attrs.dateOnly,
             futureOnly: attrs.futureOnly,
-            closeOnSelect: attrs.closeOnSelect
+            closeOnSelect: attrs.closeOnSelect,
+            fieldId: attrs.fieldId
           });
         });
       }

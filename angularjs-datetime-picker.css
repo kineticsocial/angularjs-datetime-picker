@@ -72,3 +72,15 @@
 .angularjs-datetime-picker input[type=range] {
   width: 150px;
 }
+
+.adp-month-select
+{
+  margin-left: 15px;
+}
+
+.adp-year-input {
+  width: 50px;
+  margin-left: 5px;
+  padding-left: 5px;
+  font-weight: bold;
+}
