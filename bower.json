@@ -2,7 +2,7 @@
   "name": "angularjs-datetime-picker",
   "main": "angularjs-datetime-picker.js",
   "version": "0.1.20",
-  "homepage": "https://github.com/kineticsocial/angularjs-datetime-picker",
+  "homepage": "https://github.com/petervavro/angularjs-datetime-picker",
   "authors": [
     "Allen Kim <allen.kim@kineticsocial.com>"
   ],
@@ -23,6 +23,7 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "~1.4.4"
+    "angular": "~1.4.4",
+    "moment": "^2.18.1"
   }
 }
