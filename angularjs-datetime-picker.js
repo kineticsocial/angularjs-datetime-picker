@@ -205,24 +205,7 @@
         if (attrs.ngModel) { // need to parse date string
           var dateStr = ''+ctrl.triggerEl.scope().$eval(attrs.ngModel);
           if (dateStr) {
-            if (!dateStr.match(/[0-9]{2}:/)) {  // if no time is given, add 00:00:00 at the end
-              dateStr += " 00:00:00";
-            }
-            dateStr = dateStr.replace(/([0-9]{2}-[0-9]{2})-([0-9]{4})/,'$2-$1');      //mm-dd-yyyy to yyyy-mm-dd
-            dateStr = dateStr.replace(/([\/-][0-9]{2,4})\ ([0-9]{2}\:[0-9]{2}\:)/,'$1T$2'); //reformat for FF
-            dateStr = dateStr.replace(/EDT|EST|CDT|CST|MDT|PDT|PST|UT|GMT/g,''); //remove timezone
-            dateStr = dateStr.replace(/\s*\(\)\s*/,'');                          //remove timezone
-            dateStr = dateStr.replace(/[\-\+][0-9]{2}:?[0-9]{2}$/,'');           //remove timezone
-            dateStr += getTimezoneOffset(dateStr);
-            var d = new Date(dateStr);
-            scope.selectedDate = new Date(
-              d.getFullYear(),
-              d.getMonth(),
-              d.getDate(),
-              d.getHours(),
-              d.getMinutes(),
-              d.getSeconds()
-            );
+            scope.selectedDate = moment(dateStr, dateFormat).toDate();
           }
         }
 
@@ -272,9 +255,9 @@
           //console.log('attrs.ngModel',attrs.ngModel);
           var elScope = ctrl.triggerEl.scope(), dateValue;
           if (elScope.$eval(attrs.ngModel) && elScope.$eval(attrs.ngModel).constructor.name === 'Date') {
-            dateValue = new Date(dateFilter(scope.selectedDate, dateFormat));
+            dateValue = scope.selectedDate;
           } else {
-            dateValue = dateFilter(scope.selectedDate, dateFormat);
+            dateValue = moment(scope.selectedDate).format(dateFormat);
           }
           elScope.$eval(attrs.ngModel + '= date', {date: dateValue});
         }
