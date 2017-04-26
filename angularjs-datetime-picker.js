@@ -40,6 +40,7 @@
 
     this.openDatetimePicker = function(options) {
       this.closeDatetimePicker();
+      var anchor = angular.element(document.querySelector('[datetime-picker]'));
       var div = angular.element('<div datetime-picker-popup ng-cloak></div>');
       options.dateFormat && div.attr('date-format', options.dateFormat);
       options.ngModel  && div.attr('ng-model', options.ngModel);
@@ -60,27 +61,21 @@
       datetimePickerEl = $compile(div)(options.scope)[0];
       datetimePickerEl.triggerEl = options.triggerEl;
 
-      $document[0].body.appendChild(datetimePickerEl);
+      anchor.parent().append(datetimePickerEl);
 
       //show datetimePicker below triggerEl
-      var bcr = triggerEl.getBoundingClientRect();
-
-
       options.scope.$apply();
 
       var datePickerElBcr = datetimePickerEl.getBoundingClientRect();
 
       datetimePickerEl.style.position='absolute';
-      if(bcr.width > datePickerElBcr.width){
-        datetimePickerEl.style.left= (bcr.left + bcr.width - datePickerElBcr.width + window.scrollX) + 'px';
-      } else {
-        datetimePickerEl.style.left= (bcr.left + window.scrollX) + 'px';
-      }
+      
+      datetimePickerEl.style.left= (triggerEl.offsetLeft + window.scrollX) + 'px';
 
-      if (bcr.top < 300 || window.innerHeight - bcr.bottom > 300) {
-        datetimePickerEl.style.top = (bcr.bottom + window.scrollY) + 'px';
+      if (triggerEl.offsetTop < 300 || window.innerHeight - triggerEl.offsetTop - triggerEl.clientHeight > 300) {
+        datetimePickerEl.style.top = (triggerEl.offsetTop + triggerEl.clientHeight + 2 * triggerEl.clientTop) + 'px';
       } else {
-        datetimePickerEl.style.top = (bcr.top - datePickerElBcr.height + window.scrollY) + 'px';
+        datetimePickerEl.style.top = (triggerEl.offsetTop - datePickerElBcr.height + 2 * triggerEl.clientTop) + 'px';
       }
 
       $document[0].body.addEventListener('click', this.closeDatetimePicker);
@@ -108,9 +103,10 @@
   var tmpl = [
     '<div class="angularjs-datetime-picker">' ,
     '  <div class="adp-month">',
-    '    <button type="button" class="adp-prev" ng-click="addMonth(-1)">&laquo;</button>',
+    '    <button type="button" class="adp-prev" ng-click="addMonth(-1)">&#8592;</button>',
     '    <span title="{{months[mv.month].fullName}}">{{months[mv.month].shortName}}</span> {{mv.year}}',
-    '    <button type="button" class="adp-next" ng-click="addMonth(1)">&raquo;</button>',
+    '    <button type="button" class="adp-next" ng-click="addMonth(1)">&#8594;</button>',
+    '    <button type="button" class="close" ng-click="close()">&#10006;</button>',
     '  </div>',
     '  <div class="adp-days" ng-click="setDate($event)">',
     '    <div class="adp-day-of-week" ng-repeat="dayOfWeek in ::daysOfWeek" title="{{dayOfWeek.fullName}}">{{::dayOfWeek.firstLetter}}</div>',
@@ -137,7 +133,7 @@
     var days, months, daysOfWeek, firstDayOfWeek;
 
     var initVars = function() {
-      days =[], months=[]; daysOfWeek=[], firstDayOfWeek=0;
+      days =[], months=[]; daysOfWeek=[], firstDayOfWeek=1;
       for (var i = 1; i <= 31; i++) {
         days.push(i);
       }
@@ -157,7 +153,7 @@
           firstLetter: day.substr(0, 1)
         });
       }
-      firstDayOfWeek = 0;
+      firstDayOfWeek = 1;
     };
 
     var getMonthView = function(year, month) {
@@ -247,6 +243,11 @@
           scope.selectedDay = null;
         }
       });
+
+      scope.close = function () {
+        var popupEl = document.querySelector('div[datetime-picker-popup]');
+        popupEl.remove();
+      };
 
       scope.addMonth = function (amount) {
         scope.mv = getMonthView(scope.mv.year, scope.mv.month + amount);
