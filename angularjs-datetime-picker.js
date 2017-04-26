@@ -133,7 +133,7 @@
     var days, months, daysOfWeek, firstDayOfWeek;
 
     var initVars = function() {
-      days =[], months=[]; daysOfWeek=[], firstDayOfWeek=0;
+      days =[], months=[]; daysOfWeek=[], firstDayOfWeek=1;
       for (var i = 1; i <= 31; i++) {
         days.push(i);
       }
@@ -153,7 +153,7 @@
           firstLetter: day.substr(0, 1)
         });
       }
-      firstDayOfWeek = 0;
+      firstDayOfWeek = 1;
     };
 
     var getMonthView = function(year, month) {
