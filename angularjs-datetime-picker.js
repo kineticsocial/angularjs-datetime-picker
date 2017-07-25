@@ -50,6 +50,7 @@
       options.minute   && div.attr('minute', parseInt(options.minute));
       options.allowClose && div.attr('allow-close', options.allowClose);
       options.displaySelectedDate && div.attr('display-selected-date', options.displaySelectedDate);
+      options.ngChange && div.attr('ng-change', options.ngChange);
       if (options.dateOnly === '' || options.dateOnly === true) {
         div.attr('date-only', 'true');
       }
@@ -108,7 +109,7 @@
   angular.module('angularjs-datetime-picker').controller('DatetimePickerCtrl', DatetimePickerCtrl);
 
   var tmpl = [
-    '<div class="angularjs-datetime-picker">' ,    
+    '<div class="angularjs-datetime-picker">' ,
     '  <div class="adp-month adp-top" id="adp-top" style="display: none;">',
     '    <span class="adp-prev" ></span>',
     '    <div>',
@@ -220,7 +221,7 @@
 
 
       scope.$applyAsync( function() {
-        
+
         ctrl.triggerEl = angular.element(element[0].triggerEl);
         if (attrs.ngModel) { // need to parse date string
           var dateStr = ''+ctrl.triggerEl.scope().$eval(attrs.ngModel);
@@ -236,7 +237,7 @@
               dateStr = dateStr.replace(/[\-\+][0-9]{2}:?[0-9]{2}$/,'');           //remove timezone
               dateStr += getTimezoneOffset(dateStr);
             }
-            
+
             var d = new Date(dateStr);
             scope.selectedDate = new Date(
               d.getFullYear(),
@@ -291,9 +292,9 @@
         // }
       };
       scope.displayTime = function() {
-      	if(scope.inputMinute == null || scope.inputHour == null)
-      		return ""; 
-      	return ("0"+scope.inputHour).slice(-2) + ":" + ("0"+scope.inputMinute).slice(-2);
+        if(scope.inputMinute == null || scope.inputHour == null)
+          return "";
+        return ("0"+scope.inputHour).slice(-2) + ":" + ("0"+scope.inputMinute).slice(-2);
       };
       scope.clearSelectedDate = function () {
         scope.selectedDate = null;
@@ -337,7 +338,7 @@
           scope.selectedDateUTC.setMinutes(scope.selectedDateUTC.getMinutes()+scope.selectedDateUTC.getTimezoneOffset());
           var elScope = ctrl.triggerEl.scope(), dateValue;
           if (elScope.$eval(attrs.ngModel) && elScope.$eval(attrs.ngModel).constructor.name === 'Date') {
-            dateValue = new Date(dateFilter(scope.selectedDateUTC, dateFormat));          
+            dateValue = new Date(dateFilter(scope.selectedDateUTC, dateFormat));
           } else {
             dateValue = dateFilter(scope.selectedDateUTC, dateFormat);
           }
@@ -362,7 +363,8 @@
         dateOnly: '=',
         closeOnSelect: '=',
         allowClose: '=',
-        displaySelectedDate: '='
+        displaySelectedDate: '=',
+        ngChange: '=?'
       },
       link: linkFunc
     };
@@ -387,6 +389,8 @@
           if( attrs.hasOwnProperty('futureOnly') ){
             ctrl.$setValidity('future-only', date < now? false : true);
           }
+
+           ctrl.$setViewValue(value);
         });
 
         element[0].addEventListener('click', function() {
@@ -403,7 +407,8 @@
             futureOnly: attrs.futureOnly,
             closeOnSelect: attrs.closeOnSelect,
             displaySelectedDate: attrs.displaySelectedDate,
-            allowClose: attrs.allowClose
+            allowClose: attrs.allowClose,
+            ngChange: attrs.ngChange
           });
         });
       }
