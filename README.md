@@ -53,3 +53,7 @@ Examples
 
     <input ng-model="date5" datetime-picker date-format="yyyy-MM-dd HH:mm:ss" year="2014" month="12" day="31" />
 
+Change Logs
+------------
+v.0.1.22
+Add ng-change
