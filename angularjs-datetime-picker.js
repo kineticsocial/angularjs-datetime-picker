@@ -344,6 +344,10 @@
           }
           elScope.$eval(attrs.ngModel + '= date', {date: dateValue});
         }
+
+        if(typeof(scope.ngChange) == 'function') {
+          scope.ngChange();
+        }
       };
 
       scope.$on('$destroy', ctrl.closeDatetimePicker);
@@ -364,7 +368,7 @@
         closeOnSelect: '=',
         allowClose: '=',
         displaySelectedDate: '=',
-        ngChange: '=?'
+        ngChange: '&'
       },
       link: linkFunc
     };
