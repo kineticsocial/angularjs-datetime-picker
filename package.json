@@ -29,6 +29,6 @@
     "gulp-strip-debug": "^1.0.2",
     "gulp-uglify": "^1.2.0",
     "run-sequence": "^1.1.0"
-  }
+  },
   "homepage": "https://github.com/kineticsocial/angularjs-datetime-picker"
 }
