@@ -3,8 +3,8 @@ Simple DateTime Picker For AngularJS
 
 No JQuery, No Bootstrap, Just AngularJS (ver. 1.3+)
 
-[DEMO](https://rawgit.com/kineticsocial/angularjs-datetime-picker/master/index.html)
-[![Imgur](http://i.imgur.com/UJfYMN6.png?1)](https://rawgit.com/kineticsocial/angularjs-datetime-picker/master/index.html)
+[DEMO](https://combinatronics.com/kineticsocial/angularjs-datetime-picker/master/index.html)
+[![Imgur](http://i.imgur.com/UJfYMN6.png?1)](https://combinatronics.com/kineticsocial/angularjs-datetime-picker/master/index.html)
 
 To Get Started
 --------------
