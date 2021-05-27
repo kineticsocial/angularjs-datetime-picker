@@ -323,6 +323,23 @@
         });
 
         element[0].addEventListener('click', function() {
+
+          // make sure to get the datetime attrs from the UI-Grid input field value if exists
+          var inputValue = element[0].value;
+          if (inputValue != '') {
+            var datePart = inputValue.split(' ')[0].split('/');
+            attrs.year = datePart[2];
+            attrs.month = datePart[0];
+            attrs.day = datePart[1];
+
+            var timePart = inputValue.split(' ')[1];
+            if (timePart) {
+              timePart = timePart.split(':');
+              attrs.hour = timePart[0];
+              attrs.minute = timePart[1];
+            }
+          }
+
           DatetimePicker.open({
             triggerEl: element[0],
             dateFormat: attrs.dateFormat,
